@@ -1,7 +1,10 @@
 {
     "username": "tactoctical",
     "token":    "oauth:3amvpcglyxc1xxqlr8iirm1no524i3",
-    "paths":{
-        "scripts": "scripts"
+    "prefix": "/",
+    "error_messages":{
+        "followerError": "You have to be a follower to use this command",
+        "subscriberError": "You have to be a subscriber to use this command",
+        "modError": "You have to be a mod to use this command"
     }
 }
