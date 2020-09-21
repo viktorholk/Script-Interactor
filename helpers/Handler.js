@@ -1,14 +1,17 @@
-const path = require('path');
-const { exec } = require("child_process");
-const Wrapper = require('./Wrapper')
-const Logger = require('./Logger');
-const logger = new Logger().Instance();
-const wrapper = new Wrapper().Instance();
+import Wrapper from './Wrapper';
+import Logger from './Logger';
+import { extname } from 'path';
 
-class ScriptHandler{
+console.log(Wrapper);
+return;
+const logger    = new Logger().Instance();
+const wrapper   = new Wrapper().Instance();
+
+class Handler{
     constructor(_script){
         this.scriptObject   = _script;
-        this.scriptExt      = path.extname(_script['script']);
+        this.scriptExt      = extname(_script['script']);
+
     }
 
     Execute(){
@@ -69,4 +72,4 @@ class ScriptHandler{
     }
 }
 
-module.exports = ScriptHandler;
+export default Handler;

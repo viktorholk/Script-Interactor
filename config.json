@@ -15,5 +15,15 @@
         }
     ],
     "scripts": [
+        {
+            "enabled": false,
+            "script": "dot.py",
+            "scriptCommand": "",
+            "timeOut": 30,
+            "cost": 0,
+            "followerOnly": true,
+            "subscriberOnly": false,
+            "modOnly": false
+        }
     ]
 }
