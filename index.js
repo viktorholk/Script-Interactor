@@ -29,9 +29,8 @@ class Wrapper {
         // Only create the config file if it doesn't exist already, since we dont want to override the config later
         if (!fs.existsSync(this.configPath)){
             this.WriteJson(this.configPath,{
-                username: 'tactoctical',
-                token:    'oauth:3amvpcglyxc1xxqlr8iirm1no524i3',
-                channel: 'tactoc',
+                username: '',
+                token:    '',
                 prefix: '!',
                 cooldown: 30,
                 error_messages:{
@@ -271,8 +270,6 @@ class API{
         });
 
         this.axios.interceptors.response.use(this.handleSuccess, this.handleError);
-
-
     }
 
     handleSuccess(response){
@@ -290,9 +287,10 @@ class API{
         // Check if there already is a token, then check if it is valid and if it is not return a new token
         if (this.token !== null){
             return this.axios.get('https://id.twitch.tv/oauth2/validate', { headers: { Authorization: `OAuth ${this.token}`}}).then(
-                (response) => {  Logger.Instance().Log('Bearer token is valid', 1); return this.token = response.data }
+                (response) => {  Logger.Instance().Log('Bearer token is valid', 1); return this.token}
             ).catch(
-                () => {
+                (err) => {
+                    console.log(err);
                     return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
                         (response) => { 
                             this.token = response.data['results']['access_token'];
@@ -324,16 +322,12 @@ class API{
     }
 
     async isFollowing(userid){
-        // Get the broadcaster user id so we can compare if 'userid' is following
-        const broadcasterid = await this.get(`users?login=${opts.identitiy['username']}`, (status, response) => {
-            return (response['data'][0]['id']);
-        })
-        
         return this.get(`users/follows?from_id=${userid}`, (status, response) => {
             let _isFollowing = false;
             for (let i in response['data']){
-                let to_id = response['data'][i]['to_id']
-                if (broadcasterid === to_id){
+                //console.log(response['data'][i]);
+                let to_name = response['data'][i]['to_name'];
+                if (to_name === opts.identity.username){
                     _isFollowing = true;
                     break;
                 }
@@ -343,105 +337,87 @@ class API{
     }
 }
 
-
-
-
-// Wrapper.Instance().ValidateScripts();
+Wrapper.Instance().ValidateScripts();
 let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
 
 const opts = {
-    identitiy: {
+    identity: {
         username: config.username,
         password: config.token
-    },
+      },
     channels: [
-        config.channel
+        config.username
     ]
 }
 
-i = async() => {
-    console.log(await API.Instance().isFollowing(89364306));
+
+const client = new tmi.client(opts);
+
+client.on('message', onMessageHandler)
+
+client.connect();
+
+let cache   = {
+    scripts:    [] 
 }
-i();
 
-// const client = new tmi.client(opts);
+async function  onMessageHandler (target, context, msg, self){
+    if (self) { return;}
+    Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
+    // Check if the message is a command
+    if (msg.charAt(0) === config.prefix){
+        // Check if user is following
+        context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
 
-//client.on('message', onMessageHandler)
+        const cmd = msg.split(config.prefix)[1];
 
-// client.connect();
+        // Find the script
+        for (let i in config['scripts']){
+            const _script = config['scripts'][i];
+            // Make sure the user isn't on cooldown
+            if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
+                const _date = new Date().getTime();
 
-
-// function onMessageHandler (target, context, msg, self){
-//     if (self) { return;}
-
-//     // Check if the message is a command
-//     if (msg.charAt(0) === config.prefix){
-
-//         let username = context['username']
-
-//         Logger.Instance().Log(`CHAT: ${username} ${msg}`, 4);
-//     }
-// }   
-
-            // // We will register all the users who uses a command and keeps track of when he last executed a command and checks if it was too recently
-            // let cache   = {
-            //     scripts:    [] 
-            // }
-            // if (message.message.charAt(0) === config.prefix){
-            //     const cmd = message.message.split(config.prefix)[1];
-
-            //     // Find the script
-            //     for (let i in config['scripts']){
-            //         const _script = config['scripts'][i];
-            //         // Make sure the user isn't on cooldown
-            //         if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
-            //             const _date = new Date().getTime();
-
-            //             const username = message.username;
-
-            //             let __script = null;
-            //             for (let j in cache['scripts']){
-            //                 if (cache['scripts'][j]['name'] === _script['script']){
-            //                     __script = cache['scripts'][j];
-            //                 }
-            //             }
-            //             if (__script === null){
-            //                 __script = {
-            //                     name: _script['script'],
-            //                     date: _date
-            //                 }
-            //                 cache['scripts'].push(__script);
-            //             }
+                let __script = null;
+                for (let j in cache['scripts']){
+                    if (cache['scripts'][j]['name'] === _script['script']){
+                        __script = cache['scripts'][j];
+                    }
+                }
+                if (__script === null){
+                    __script = {
+                        name: _script['script'],
+                        date: _date
+                    }
+                    cache['scripts'].push(__script);
+                }
 
 
 
-            //             const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
-            //             const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
+                const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
+                const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
 
-            //             const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
+                const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
-            //             // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
-            //             if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
-            //                 chat.say(channel, `@${username}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
-            //             }else{
-            //                 new Handler(new Script(_script['script'])).Execute();
-            //                 // Update the date
-            //                 cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
-            //                 return;
-            //             }
+                // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
+                if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
+                    client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
+                }else{
+                    new Handler(new Script(_script['script'])).Execute();
+                    // Update the date
+                    cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
+                    return;
+                }
 
+                console.log(scriptCooldownTotal);
+                console.log(scriptCooldownSinceLast);
 
-
-            //             console.log(scriptCooldownTotal);
-            //             console.log(scriptCooldownSinceLast);
-
-            //             console.log(scriptCooldownRemaining);
-
-
-
-            //         }
-            //     }
-            // }
+                console.log(scriptCooldownRemaining);
+            }
+        }
+        console.log(cache);
+    }
+}   
 
 function getDiffInSec(oldTime, newTime){
     return diff = (newTime - oldTime) / 1000;
