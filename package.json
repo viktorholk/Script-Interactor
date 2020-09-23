@@ -17,9 +17,7 @@
   },
   "homepage": "https://github.com/viktorholk/Script-Interactor#readme",
   "dependencies": {
-    "got": "^11.7.0",
-    "request": "^2.88.2",
-    "tmi": "^2.0.0",
+    "axios": "^0.20.0",
     "tmi.js": "^1.5.0"
   }
 }
