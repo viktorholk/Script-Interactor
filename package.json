@@ -10,10 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/viktorholk/Script-Interactor.git"
   },
-  "author": "viktor.holk",
+  "author": "viktorholk",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/viktorholk/Script-Interactor/issues"
   },
-  "homepage": "https://github.com/viktorholk/Script-Interactor#readme"
+  "homepage": "https://github.com/viktorholk/Script-Interactor#readme",
+  "dependencies": {
+    "twitch-js": "^2.0.0-beta.33"
+  }
 }
