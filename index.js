@@ -1,14 +1,18 @@
 const path          = require('path');
 const fs            = require('fs');
 const { exec }      = require('child_process');
-
 const axios         = require('axios');
 const tmi           = require('tmi.js');
 
+/**
+ *  Our Wrapper function does everything from creating the nescessary folders and files to read write and validation of the scripts.
+ */
 class Wrapper {
+    // With this static instance function, we can make the class a singleton class so we only have to initiate it once.
     static _INSTANCE = null;
 
     static Instance(){
+        // If the class have not been yet create new else return existing.
         if (this._INSTANCE == null){
             this._INSTANCE = new Wrapper();
         }
@@ -49,6 +53,7 @@ class Wrapper {
         }
        }
 
+       // Create a folder with the logger class
     CreateFolder(_path){
         if (!fs.existsSync(_path)){
             fs.mkdir(_path, (err) => { 
@@ -60,6 +65,7 @@ class Wrapper {
         }
     }
 
+    // Read and return json object
     ReadJson(_path){
         if (fs.existsSync(_path)){
             try{
@@ -73,6 +79,7 @@ class Wrapper {
         return null;
     }
 
+    // Read json object and write it to file
     WriteJson(_path, data){
         try{
             fs.writeFileSync(_path, JSON.stringify(
@@ -87,10 +94,10 @@ class Wrapper {
     /**
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
-    
     ValidateScripts(){
         let _config = this.ReadJson(this.configPath);
         let files = fs.readdirSync(this.scriptsPath);
+
         for (let i in files){
             let _file = files[i];
             // Compare all file names to script names in config
@@ -100,11 +107,13 @@ class Wrapper {
                     exists = true;
                 }
             }
+            // If the metadata doesn't exist create it
             if (!exists){
                 new Handler(new Script(_file)).AppendScript();
             }
         } 
 
+        // If there is a metadata script for a file that doesn't exist delete it
         for (let i in _config['scripts']){
             let _script = _config['scripts'][i]['script'];
             // Compare all file names to script names in config
@@ -120,7 +129,9 @@ class Wrapper {
         } 
     }
 }
-
+/**
+ *  Our handler uses the Script class to append and remove from the metadata file, and from its extension it will execute it with the Execute() funtion
+ */
 class Handler{
     constructor(_script){
         this.scriptObject   = _script;
@@ -197,7 +208,9 @@ class Handler{
         this.logger.Log('Could not find ' + this.scriptObject['script'] + ' in [scripts]');
     }
 }
-
+/**
+ * Logger prints colorful text in a format
+ */
 class Logger{
     static _INSTANCE = null;
 
@@ -233,21 +246,27 @@ class Logger{
         this.logs.push(log)
     }
 }
-
+/**
+ * Script class 
+ */
 class Script{
     constructor(_scriptName){
         this.enabled        = false,
         this.script         = _scriptName,
         this.scriptCommand  = '',
-        this.cooldown        = 0,
+        this.cooldown       = 0,
         this.cost           = 0,
         this.followerOnly   = true,
         this.subscriberOnly = false,
         this.modOnly        = false
     }
 }
-
+/**
+ * API class connects to the api.tactoctical.com and gets a OAuth token from the Script-interacter client-id and secret and returns it
+ * It can also connect to the Twitch API to check if a user is following or not
+ */
 class API{
+    // Singleton class
     static _INSTANCE = null;
 
     static Instance(){
@@ -260,6 +279,7 @@ class API{
     constructor(){
         this.api    = 'https://api.twitch.tv/helix/'
         this.token  = null;
+        // Create axios instance with client id in common header
         this.axios  = axios.create({
             headers:{
                 common:{
@@ -312,14 +332,18 @@ class API{
 
 
     async get(path, callback){
+        // Validate token
         await this.validateToken();
+        // Get the full path
         path = this.api + path;
+        //make request and use callback
         return this.axios.get(path).then(
             (response) => callback(response.status, response.data)
         );
     }
 
     async isFollowing(userid){
+        // Check if a userid is a follower to the broadcaster channel
         return this.get(`users/follows?from_id=${userid}`, (status, response) => {
             let _isFollowing = false;
             for (let i in response['data']){
@@ -334,10 +358,12 @@ class API{
         })
     }
 }
-
+// Validate scripts and create the necessary folders and files.
 Wrapper.Instance().ValidateScripts();
+// Import the config from config.json with our wrapper
 let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
 
+// Twitch options
 const opts = {
     identity: {
         username: config.username,
@@ -348,22 +374,25 @@ const opts = {
     ]
 }
 
+// Client
 const client = new tmi.client(opts);
-
+// Events
 client.on('message', onMessageHandler)
-
+// Connect
 client.connect();
 
+// Our cache that holds the date from when a script last was executed
 let cache   = {
     scripts:    [] 
 }
 
 async function  onMessageHandler (target, context, msg, self){
-    if (self) { return;}
-    Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
     // Check if the message is a command
     if (msg.charAt(0) === config.prefix){
+        // Print the command
+        Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
 
+        // get the command without the prefix
         const cmd = msg.split(config.prefix)[1];
 
         // Find the script
@@ -376,13 +405,14 @@ async function  onMessageHandler (target, context, msg, self){
 
 
                 const _date = new Date().getTime();
-
+                // See if the script already is in the cache
                 let __script = null;
                 for (let j in cache['scripts']){
                     if (cache['scripts'][j]['name'] === _script['script']){
                         __script = cache['scripts'][j];
                     }
                 }
+                // If there is no script push it to the cache with a date
                 if (__script === null){
                     __script = {
                         name: _script['script'],
@@ -391,9 +421,9 @@ async function  onMessageHandler (target, context, msg, self){
                     cache['scripts'].push(__script);
                 }
 
+                // Calculate the times
                 const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
                 const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
-
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
                 // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
