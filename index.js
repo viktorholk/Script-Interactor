@@ -1,17 +1,7 @@
 const path          = require('path');
 const fs            = require('fs');
+const { exec }      = require('child_process');
 const TwitchJs      = require('twitch-js').default;
-// const username  = config.username;
-// const token     = config.token;
-// const { chat } = new TwitchJs({ username, token })
-//const channel = 'tactoc';
-// chat.connect().then(() => {
-//     chat.join(channel) .then(channelState => {
-//         chat.on('PRIVMSG', message => {
-//             console.log(message)
-//         });
-//     })
-// })
 
 class Wrapper {
     static _INSTANCE = null;
@@ -38,7 +28,7 @@ class Wrapper {
             this.WriteJson(this.configPath,{
                 username: 'tactoctical',
                 token:    'oauth:3amvpcglyxc1xxqlr8iirm1no524i3',
-                prefix: '/',
+                prefix: '!',
                 error_messages:{
                     followerError: 'You have to be a follower to use this command',
                     subscriberError: 'You have to be a subscriber to use this command',
@@ -98,7 +88,6 @@ class Wrapper {
     ValidateScripts(){
         let _config = this.ReadJson(this.configPath);
         let files = fs.readdirSync(this.scriptsPath);
-        console.log(files)
         for (let i in files){
             let _file = files[i];
             // Compare all file names to script names in config
@@ -133,13 +122,14 @@ class Handler{
     constructor(_script){
         this.scriptObject   = _script;
         this.scriptExt      = path.extname(_script['script']);
+        this.scriptPath     = path.join('scripts', this.scriptObject['script']);
         this.wrapper        = Wrapper.Instance();
         this.logger         = Logger.Instance();
     }   
 
     Execute(){
         
-        let _config = wrapper.ReadJson(this.wrapper.configPath);
+        let _config = this.wrapper.ReadJson(this.wrapper.configPath);
         // Check if script exists in [scripts]
         let exists = false;
         for (let i in _config['scripts']){
@@ -147,12 +137,22 @@ class Handler{
                 exists = true
             }
         }
-        if (!exists) this.AppendScript();
+        if (!exists) {
+            this.logger.Log(`EXECUTE: ${this.scriptObject['script']} does not exist`, 3);
+            return;
+        };
         //Read config and see what extensions are avaiable
         let method = null;
         for (let i in _config['execute_config']){
             if (_config['execute_config'][i]['ext'] === this.scriptExt){
                 method = _config['execute_config'][i];
+                exec(`${method['shell']} ${this.scriptPath}`, (err, stdout, stderr) =>{
+                    if (err){
+                        this.logger.Log(err, 3);
+                        return;
+                    }
+                    this.logger.Log(`${this.scriptObject['script']}: ${stdout}`, 4);
+                })
             }
         }
         if (!method){
@@ -160,7 +160,7 @@ class Handler{
             return;
         }
 
-        this.logger.Log('Executing ' + this.scriptObject['script'], 2);
+        this.logger.Log('EXECUTE: ' + this.scriptObject['script'], 2);
     }
 
     AppendScript(){
@@ -192,19 +192,6 @@ class Handler{
             }
         }
         this.logger.Log('Could not find ' + this.scriptObject['script'] + ' in [scripts]');
-    }
-}
-
-class Script{
-    constructor(_scriptName){
-        this.enabled        = false,
-        this.script         = _scriptName,
-        this.scriptCommand  = '',
-        this.timeOut        = 30,
-        this.cost           = 0,
-        this.followerOnly   = true,
-        this.subscriberOnly = false,
-        this.modOnly        = false
     }
 }
 
@@ -243,4 +230,40 @@ class Logger{
         this.logs.push(log)
     }
 }
+
+class Script{
+    constructor(_scriptName){
+        this.enabled        = false,
+        this.script         = _scriptName,
+        this.scriptCommand  = '',
+        this.timeOut        = 30,
+        this.cost           = 0,
+        this.followerOnly   = true,
+        this.subscriberOnly = false,
+        this.modOnly        = false
+    }
+}
+
 Wrapper.Instance().ValidateScripts();
+
+let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
+
+const username  = config.username;
+const token     = config.token;
+const { chat } = new TwitchJs({ username, token })
+const channel = 'tactoc';
+chat.connect().then(() => {
+    chat.join(channel) .then(channelState => {
+        chat.on('PRIVMSG', message => {
+            if (message.message.charAt(0) === config.prefix){
+                const cmd = message.message.split(config.prefix)[1];
+                // Find the script
+                for (i in config['scripts']){
+                    if (config['scripts'][i]['scriptCommand'] !== '' && config['scripts'][i]['enabled'] !== false  && config['scripts'][i]['scriptCommand'] === cmd){
+                        new Handler(new Script(config['scripts'][i]['script'])).Execute();
+                    }
+                }
+            }
+        });
+    })
+})
