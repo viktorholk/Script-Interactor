@@ -1,10 +1,9 @@
 const path          = require('path');
 const fs            = require('fs');
-const request       = require('request');
 const { exec }      = require('child_process');
+
 const axios         = require('axios');
 const tmi           = require('tmi.js');
-const { post } = require('request');
 
 class Wrapper {
     static _INSTANCE = null;
@@ -290,7 +289,6 @@ class API{
                 (response) => {  Logger.Instance().Log('Bearer token is valid', 1); return this.token}
             ).catch(
                 (err) => {
-                    console.log(err);
                     return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
                         (response) => { 
                             this.token = response.data['results']['access_token'];
@@ -350,7 +348,6 @@ const opts = {
     ]
 }
 
-
 const client = new tmi.client(opts);
 
 client.on('message', onMessageHandler)
@@ -366,8 +363,6 @@ async function  onMessageHandler (target, context, msg, self){
     Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
     // Check if the message is a command
     if (msg.charAt(0) === config.prefix){
-        // Check if user is following
-        context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
 
         const cmd = msg.split(config.prefix)[1];
 
@@ -376,6 +371,10 @@ async function  onMessageHandler (target, context, msg, self){
             const _script = config['scripts'][i];
             // Make sure the user isn't on cooldown
             if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
+                // Check if user is following
+                context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
+
+
                 const _date = new Date().getTime();
 
                 let __script = null;
@@ -392,8 +391,6 @@ async function  onMessageHandler (target, context, msg, self){
                     cache['scripts'].push(__script);
                 }
 
-
-
                 const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
                 const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
 
@@ -408,14 +405,8 @@ async function  onMessageHandler (target, context, msg, self){
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
                     return;
                 }
-
-                console.log(scriptCooldownTotal);
-                console.log(scriptCooldownSinceLast);
-
-                console.log(scriptCooldownRemaining);
             }
         }
-        console.log(cache);
     }
 }   
 
