@@ -1,7 +1,9 @@
 const path          = require('path');
 const fs            = require('fs');
+const request       = require('request');
 const { exec }      = require('child_process');
-const TwitchJs      = require('twitch-js').default;
+const got           = require('got');
+const tmi           = require('tmi.js');
 
 class Wrapper {
     static _INSTANCE = null;
@@ -28,7 +30,9 @@ class Wrapper {
             this.WriteJson(this.configPath,{
                 username: 'tactoctical',
                 token:    'oauth:3amvpcglyxc1xxqlr8iirm1no524i3',
+                channel: 'tactoc',
                 prefix: '!',
+                cooldown: 30,
                 error_messages:{
                     followerError: 'You have to be a follower to use this command',
                     subscriberError: 'You have to be a subscriber to use this command',
@@ -236,7 +240,7 @@ class Script{
         this.enabled        = false,
         this.script         = _scriptName,
         this.scriptCommand  = '',
-        this.timeOut        = 30,
+        this.cooldown        = 0,
         this.cost           = 0,
         this.followerOnly   = true,
         this.subscriberOnly = false,
@@ -244,26 +248,134 @@ class Script{
     }
 }
 
-Wrapper.Instance().ValidateScripts();
+class API{
+    static _INSTANCE = null;
 
+    static Instance(){
+        if (this._INSTANCE === null){
+            this._INSTANCE = new API();
+        }
+        return this._INSTANCE;
+    }
+
+    constructor(){
+        this.url = 'https://api.twitch.tv/helix'
+    }
+
+    get(){
+        got(
+            'https://api.twitch.tv/helix/users??id=44322889',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Client-ID': 'vfn9l9kikr77duyv6cpu1tz7i0dqtj'
+                },
+                gzip: true
+            }
+        )
+        .then(resp => {
+            return resp.body;
+        }).catch(err =>{
+            Logger.Instance().Log(`ERROR: ${err}`, 4);
+        });
+    }
+}
+
+
+Wrapper.Instance().ValidateScripts();
 let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
 
-const username  = config.username;
-const token     = config.token;
-const { chat } = new TwitchJs({ username, token })
-const channel = 'tactoc';
-chat.connect().then(() => {
-    chat.join(channel) .then(channelState => {
-        chat.on('PRIVMSG', message => {
-            if (message.message.charAt(0) === config.prefix){
-                const cmd = message.message.split(config.prefix)[1];
-                // Find the script
-                for (i in config['scripts']){
-                    if (config['scripts'][i]['scriptCommand'] !== '' && config['scripts'][i]['enabled'] !== false  && config['scripts'][i]['scriptCommand'] === cmd){
-                        new Handler(new Script(config['scripts'][i]['script'])).Execute();
-                    }
-                }
-            }
-        });
-    })
-})
+const opts = {
+    identitiy: {
+        username: config.username,
+        password: config.token
+    },
+    channels: [
+        config.channel
+    ]
+}
+
+const client = new tmi.client(opts);
+
+//client.on('message', onMessageHandler)
+
+client.connect();
+
+API.Instance().get();
+
+function onMessageHandler (target, context, msg, self){
+    if (self) { return;}
+
+    // Check if the message is a command
+    if (msg.charAt(0) === config.prefix){
+
+        let username = context['username']
+
+        Logger.Instance().Log(`CHAT: ${username} ${msg}`, 4);
+    }
+    
+}   
+
+            // // We will register all the users who uses a command and keeps track of when he last executed a command and checks if it was too recently
+            // let cache   = {
+            //     scripts:    [] 
+            // }
+            // if (message.message.charAt(0) === config.prefix){
+            //     const cmd = message.message.split(config.prefix)[1];
+
+            //     // Find the script
+            //     for (let i in config['scripts']){
+            //         const _script = config['scripts'][i];
+            //         // Make sure the user isn't on cooldown
+            //         if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
+            //             const _date = new Date().getTime();
+
+            //             const username = message.username;
+
+            //             let __script = null;
+            //             for (let j in cache['scripts']){
+            //                 if (cache['scripts'][j]['name'] === _script['script']){
+            //                     __script = cache['scripts'][j];
+            //                 }
+            //             }
+            //             if (__script === null){
+            //                 __script = {
+            //                     name: _script['script'],
+            //                     date: _date
+            //                 }
+            //                 cache['scripts'].push(__script);
+            //             }
+
+
+
+            //             const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
+            //             const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
+
+            //             const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
+
+            //             // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
+            //             if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
+            //                 chat.say(channel, `@${username}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
+            //             }else{
+            //                 new Handler(new Script(_script['script'])).Execute();
+            //                 // Update the date
+            //                 cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
+            //                 return;
+            //             }
+
+
+
+            //             console.log(scriptCooldownTotal);
+            //             console.log(scriptCooldownSinceLast);
+
+            //             console.log(scriptCooldownRemaining);
+
+
+
+            //         }
+            //     }
+            // }
+
+function getDiffInSec(oldTime, newTime){
+    return diff = (newTime - oldTime) / 1000;
+}
