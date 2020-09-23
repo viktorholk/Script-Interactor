@@ -4,8 +4,8 @@ const path = require('path');
 const Logger = require('./Logger');
 const logger = new Logger().Instance();
 
+const Handler = require('./Handler').default;
 const Script = require('./Script');
-const ScriptHandler = require('./ScriptHandler');
 
 class Wrapper {
     constructor(){
@@ -79,36 +79,36 @@ class Wrapper {
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
     
-    // ValidateScripts(){
-    //     let _config = this.ReadJson(this.configPath);
-    //     let files = fs.readdirSync(this.scriptsPath);
+    ValidateScripts(){
+        let _config = this.ReadJson(this.configPath);
+        let files = fs.readdirSync(this.scriptsPath);
 
-    //     for (let i in files){
-    //         let _file = files[i];
-    //         // Compare all file names to script names in config
-    //         let exists = false;
-    //         for (let j in _config['scripts']){
-    //             if (_config['scripts'][j]['script'] === _file){
-    //                 exists = true;
-    //             }
-    //         }
-    //         if (!exists){
+        for (let i in files){
+            let _file = files[i];
+            // Compare all file names to script names in config
+            let exists = false;
+            for (let j in _config['scripts']){
+                if (_config['scripts'][j]['script'] === _file){
+                    exists = true;
+                }
+            }
+            if (!exists){
+                new Handler(new Script(_file)).AppendScript();
+            }
+        } 
 
-    //         }
-    //     } 
+        for (let i in _config['scripts']){
+            let _script = _config['scripts'][i]['script'];
 
-    //     for (let i in _config['scripts']){
-    //         let _script = _config['scripts'][i]['script'];
-
-    //         for (let j in files){
-    //             let _file = files[j];
-    //             if (_script === _file){
-    //                 continue;
-    //             }
-    //         }
-    //         //_obj = new ScriptHandler(new Script(_file)).RemoveScript();
-    //     }
-    // }
+            for (let j in files){
+                let _file = files[j];
+                if (_script === _file){
+                    continue;
+                }
+            }
+            //_obj = new ScriptHandler(new Script(_file)).RemoveScript();
+        }
+    }
 }
 
 class Singleton{
