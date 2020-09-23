@@ -1,4 +1,7 @@
 {
     "username": "tactoctical",
-    "token":    "oauth:3amvpcglyxc1xxqlr8iirm1no524i3"
+    "token":    "oauth:3amvpcglyxc1xxqlr8iirm1no524i3",
+    "paths":{
+        "scripts": "scripts"
+    }
 }
