@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/viktorholk/Script-Interactor#readme",
   "dependencies": {
-    "twitch-js": "^2.0.0-beta.33"
+    "got": "^11.7.0",
+    "request": "^2.88.2",
+    "tmi": "^2.0.0",
+    "tmi.js": "^1.5.0"
   }
 }
