@@ -2,8 +2,9 @@ const path          = require('path');
 const fs            = require('fs');
 const request       = require('request');
 const { exec }      = require('child_process');
-const got           = require('got');
+const axios         = require('axios');
 const tmi           = require('tmi.js');
+const { post } = require('request');
 
 class Wrapper {
     static _INSTANCE = null;
@@ -259,30 +260,93 @@ class API{
     }
 
     constructor(){
-        this.url = 'https://api.twitch.tv/helix'
+        this.api    = 'https://api.twitch.tv/helix/'
+        this.token  = null;
+        this.axios  = axios.create({
+            headers:{
+                common:{
+                    'Client-Id': 'm47mvaevmze4cnkb8ziotc10dct21y'
+                }
+            }
+        });
+
+        this.axios.interceptors.response.use(this.handleSuccess, this.handleError);
+
+
     }
 
-    get(){
-        got(
-            'https://api.twitch.tv/helix/users??id=44322889',
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Client-ID': 'vfn9l9kikr77duyv6cpu1tz7i0dqtj'
-                },
-                gzip: true
+    handleSuccess(response){
+        return response
+    }
+
+    handleError(error){
+        return Promise.reject(
+            Logger.Instance().Log(`ERROR: ${error}`, 3)
+        );
+    }
+
+    validateToken(){
+        // Returns the token from api.tactoctical.com
+        // Check if there already is a token, then check if it is valid and if it is not return a new token
+        if (this.token !== null){
+            return this.axios.get('https://id.twitch.tv/oauth2/validate', { headers: { Authorization: `OAuth ${this.token}`}}).then(
+                (response) => {  Logger.Instance().Log('Bearer token is valid', 1); return this.token = response.data }
+            ).catch(
+                () => {
+                    return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
+                        (response) => { 
+                            this.token = response.data['results']['access_token'];
+                            // Set the token in the header
+                            this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+                            Logger.Instance().Log('Updated bearer token', 1);
+                            return this.token;
+                        });
+                 });
+        }
+        // return a new token
+        return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
+            (response) => { 
+                this.token = response.data['results']['access_token'] ;
+                // Set the token in the header
+                this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+                Logger.Instance().Log('Applied bearer token', 2);
+                return this.token;
+            });
+    }
+
+
+    async get(path, callback){
+        await this.validateToken();
+        path = this.api + path;
+        return this.axios.get(path).then(
+            (response) => callback(response.status, response.data)
+        );
+    }
+
+    async isFollowing(userid){
+        // Get the broadcaster user id so we can compare if 'userid' is following
+        const broadcasterid = await this.get(`users?login=${opts.identitiy['username']}`, (status, response) => {
+            return (response['data'][0]['id']);
+        })
+        
+        return this.get(`users/follows?from_id=${userid}`, (status, response) => {
+            let _isFollowing = false;
+            for (let i in response['data']){
+                let to_id = response['data'][i]['to_id']
+                if (broadcasterid === to_id){
+                    _isFollowing = true;
+                    break;
+                }
             }
-        )
-        .then(resp => {
-            return resp.body;
-        }).catch(err =>{
-            Logger.Instance().Log(`ERROR: ${err}`, 4);
-        });
+            return _isFollowing;
+        })
     }
 }
 
 
-Wrapper.Instance().ValidateScripts();
+
+
+// Wrapper.Instance().ValidateScripts();
 let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
 
 const opts = {
@@ -295,26 +359,29 @@ const opts = {
     ]
 }
 
-const client = new tmi.client(opts);
+i = async() => {
+    console.log(await API.Instance().isFollowing(89364306));
+}
+i();
+
+// const client = new tmi.client(opts);
 
 //client.on('message', onMessageHandler)
 
-client.connect();
+// client.connect();
 
-API.Instance().get();
 
-function onMessageHandler (target, context, msg, self){
-    if (self) { return;}
+// function onMessageHandler (target, context, msg, self){
+//     if (self) { return;}
 
-    // Check if the message is a command
-    if (msg.charAt(0) === config.prefix){
+//     // Check if the message is a command
+//     if (msg.charAt(0) === config.prefix){
 
-        let username = context['username']
+//         let username = context['username']
 
-        Logger.Instance().Log(`CHAT: ${username} ${msg}`, 4);
-    }
-    
-}   
+//         Logger.Instance().Log(`CHAT: ${username} ${msg}`, 4);
+//     }
+// }   
 
             // // We will register all the users who uses a command and keeps track of when he last executed a command and checks if it was too recently
             // let cache   = {
