@@ -465,14 +465,15 @@ async function  onMessageHandler (target, context, msg, self){
 
                 // Calculate the times
                 const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
-                const scriptCooldownSinceLast   = getDiffInSec(__script['date'], _date);
+                const scriptCooldownSinceLast   = (_date - _script['date']) / 1000;
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
                 // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                 }else{
-                    client.say(target, `@${context['username']}, Executing ${_script['name'] !== '' ? _script['name'] : _script['script']}`);
+                    // Print the script name if it isn't empty else script command
+                    client.say(target, `@${context['username']}, Executing ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
                     new Handler(new Script(_script['script'])).Execute();
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
@@ -482,7 +483,3 @@ async function  onMessageHandler (target, context, msg, self){
         }
     }
 }   
-
-function getDiffInSec(oldTime, newTime){
-    return diff = (newTime - oldTime) / 1000;
-}
