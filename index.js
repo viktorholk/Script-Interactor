@@ -422,11 +422,11 @@ async function  onMessageHandler (target, context, msg, self){
         // get the command without the prefix
         const message_list = msg.replace('!', '').split(' ');
         const cmd   = message_list[0];
+        let args = null;
 
         if (message_list.length > 1){
             args  = message_list.slice(1);
         }
-        Logger.Instance().Log(args);
         // Find the script
         for (let i in config['scripts']){
             const _script = config['scripts'][i];
@@ -471,7 +471,7 @@ async function  onMessageHandler (target, context, msg, self){
 
                 // Calculate the times
                 const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
-                const scriptCooldownSinceLast   = (_date - _script['date']) / 1000;
+                const scriptCooldownSinceLast   = (_date - __script['date']) / 1000;
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
                 console.log(scriptCooldownTotal);
