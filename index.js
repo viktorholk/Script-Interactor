@@ -353,6 +353,7 @@ class API{
         })
     }
 }
+/// Main program
 // Validate scripts and create the necessary folders and files.
 Wrapper.Instance().ValidateScripts();
 // Import the config from config.json with our wrapper
@@ -419,8 +420,13 @@ async function  onMessageHandler (target, context, msg, self){
         Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
 
         // get the command without the prefix
-        const cmd = msg.split(config.prefix)[1];
-
+        const message_list = msg.replace('!', '').split(' ');
+        const cmd   = message_list[0];
+        
+        if (message_list.length > 1){
+            args  = message_list.slice(1);
+        }
+        Logger.Instance().Log(args);
         // Find the script
         for (let i in config['scripts']){
             const _script = config['scripts'][i];
