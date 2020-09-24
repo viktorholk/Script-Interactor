@@ -133,5 +133,8 @@ async function  onMessageHandler (target, context, msg, self){
                 }
             }
         }
+    }else{
+        // if it isn't a command log it anyways but with Logger.Log(,1)
+        Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 1);
     }
 }   
