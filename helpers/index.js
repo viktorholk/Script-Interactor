@@ -150,7 +150,7 @@ class Handler{
         this.scriptPath     = path.join('scripts', this.scriptObject['script']);
     }   
 
-    Execute(){
+    Execute(args=null){
         try {
             let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
             // Check if script exists in [scripts]
@@ -167,11 +167,10 @@ class Handler{
             //Read config and see what extensions are avaiable
             let method = null;
             for (let i in _config['execute_config']){
-                let methodExists = false;
                 if (_config['execute_config'][i]['ext'] === this.scriptExt){
-                    methodExists = true;
                     method = _config['execute_config'][i];
-                    exec(`${method['shell']} ${this.scriptPath}`, (err, stdout, stderr) =>{
+
+                    exec(`${method['shell']} ${this.scriptPath} ` + args != null ? args[1] : '' , (err, stdout, stderr) =>{
                         if (err){
                             Logger.Instance().Log(err, 3);
                         }

@@ -124,7 +124,7 @@ async function  onMessageHandler (target, context, msg, self){
                     Logger.Instance().Log(`${_script['script']} is on cooldown ${scriptCooldownRemaining}s remaining`, 1);
                 }else{
                     // Print the script name if it isn't empty else script command
-                    if(new Handler(_script['script']).Execute()){
+                    if(new Handler(_script['script']).Execute(args)){
                         client.say(target, `@${context['username']}, Successfully executed ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
                     }
                     // Update the date

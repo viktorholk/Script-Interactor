@@ -1,0 +1,10 @@
+{    
+    "enabled"        : false,
+    "name"           : "Button Press",
+    "script"         : "press.py",
+    "scriptCommand"  : "press",
+    "cooldown"       : 0,
+    "followerOnly"   : true,
+    "subscriberOnly" : false,
+    "modOnly"        : false
+}
