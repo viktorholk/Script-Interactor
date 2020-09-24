@@ -474,9 +474,6 @@ async function  onMessageHandler (target, context, msg, self){
                 const scriptCooldownSinceLast   = (_date - __script['date']) / 1000;
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
-                console.log(scriptCooldownTotal);
-                console.log(scriptCooldownSinceLast);
-                console.log(scriptCooldownRemaining);
 
                 // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
