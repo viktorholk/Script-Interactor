@@ -433,6 +433,22 @@ async function  onMessageHandler (target, context, msg, self){
                 // Check if user is following
                 context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
 
+                //Check if script is follow only
+                if (_script['followerOnly'] && !context['isFollowing']){
+                    client.say(target, `@${context['username']}, Sorry! this script is follower only.`)
+                    return;
+                }
+                //Check if script is sub only
+                if (_script['subscriberOnly'] && !context['subscriber']){
+                    client.say(target, `@${context['username']}, Sorry! this script is subscriber only.`)
+                    return;
+                }
+
+                //Check if script is mod only
+                if (_script['modOnly'] && !context['mod']){
+                    client.say(target, `@${context['username']}, Sorry! this script is moderator only.`)
+                    return;
+                }
 
                 const _date = new Date().getTime();
                 // See if the script already is in the cache
@@ -460,7 +476,7 @@ async function  onMessageHandler (target, context, msg, self){
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                 }else{
-                    client.say(target, `@${context['username']} Executing ${_script['scriptCommand']}`);
+                    client.say(target, `@${context['username']}, Executing ${_script['scriptCommand']}`);
                     new Handler(new Script(_script['script'])).Execute();
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
