@@ -44,6 +44,11 @@ class Wrapper {
                 cooldown: 30,
                 execute_config:[
                     {
+                        name: 'Executable',
+                        ext: '.exe',
+                        shell: 'start '
+                    },
+                    {
                         name: "python",
                         ext: ".py",
                         shell: "python "
@@ -157,7 +162,7 @@ class Handler{
             }
             if (!exists) {
                 Logger.Instance().Log(`EXECUTE: ${this.scriptObject['script']} does not exist`, 3);
-                return;
+                return false;
             };
             //Read config and see what extensions are avaiable
             let method = null;
@@ -169,20 +174,18 @@ class Handler{
                     exec(`${method['shell']} ${this.scriptPath}`, (err, stdout, stderr) =>{
                         if (err){
                             Logger.Instance().Log(err, 3);
-                            return;
                         }
                         Logger.Instance().Log(`${this.scriptObject['script']}: ${stdout}`, 4);
                     })
                 }
-                // If we got this far that means that the extention doesn't exist
-                Logger.Instance().Log(`Executing method does not exist ${this.scriptObject['ext']}` ,3);
             }
             if (!method){
-                Logger.Instance().Log('Not a valid script ' + this.scriptExt);
-                return;
+                Logger.Instance().Log('Not a valid script ' + this.scriptExt, 3);
+                return false;
             }
     
             Logger.Instance().Log('EXECUTE: ' + this.scriptObject['script'], 2);
+            return true;
 
         } catch (err){
             Logger.Instance().Log(`ERROR: ${err}`, 3);
@@ -198,7 +201,6 @@ class Handler{
             let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
             // Check if script already exists
             for (let i in _config['scripts']){
-                console.log(_config['scripts'][i]);
                 if (_config['scripts'][i]['script'] === this.scriptObject['script']){
                     Logger.Instance().Log(this.scriptObject['script'] + ' already exists', 3)
                     return;
