@@ -36,11 +36,6 @@ class Wrapper {
                 token:    '',
                 prefix: '!',
                 cooldown: 30,
-                error_messages:{
-                    followerError: 'You have to be a follower to use this command',
-                    subscriberError: 'You have to be a subscriber to use this command',
-                    modError: 'You have to be a mod to use this command'
-                },
                 execute_config:[
                     {
                         name: "python",
@@ -252,10 +247,10 @@ class Logger{
 class Script{
     constructor(_scriptName){
         this.enabled        = false,
+        this.name           = '',
         this.script         = _scriptName,
         this.scriptCommand  = '',
         this.cooldown       = 0,
-        this.cost           = 0,
         this.followerOnly   = true,
         this.subscriberOnly = false,
         this.modOnly        = false
@@ -376,6 +371,7 @@ const opts = {
 
 // Client
 const client = new tmi.client(opts);
+
 // Events
 client.on('connecting', (address, port) => {
     Logger.Instance().Log(`Connecting ${address}:${port}`, 1);
@@ -476,7 +472,7 @@ async function  onMessageHandler (target, context, msg, self){
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                 }else{
-                    client.say(target, `@${context['username']}, Executing ${_script['scriptCommand']}`);
+                    client.say(target, `@${context['username']}, Executing ${_script['name']}`);
                     new Handler(new Script(_script['script'])).Execute();
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
