@@ -162,7 +162,9 @@ class Handler{
             //Read config and see what extensions are avaiable
             let method = null;
             for (let i in _config['execute_config']){
+                let methodExists = false;
                 if (_config['execute_config'][i]['ext'] === this.scriptExt){
+                    methodExists = true;
                     method = _config['execute_config'][i];
                     exec(`${method['shell']} ${this.scriptPath}`, (err, stdout, stderr) =>{
                         if (err){
@@ -172,6 +174,8 @@ class Handler{
                         Logger.Instance().Log(`${this.scriptObject['script']}: ${stdout}`, 4);
                     })
                 }
+                // If we got this far that means that the extention doesn't exist
+                Logger.Instance().Log(`Executing method does not exist ${this.scriptObject['ext']}` ,3);
             }
             if (!method){
                 Logger.Instance().Log('Not a valid script ' + this.scriptExt);
