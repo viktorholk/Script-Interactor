@@ -377,7 +377,37 @@ const opts = {
 // Client
 const client = new tmi.client(opts);
 // Events
-client.on('message', onMessageHandler)
+client.on('connecting', (address, port) => {
+    Logger.Instance().Log(`Connecting ${address}:${port}`, 1);
+})
+
+client.on('connected', () => {
+    Logger.Instance().Log(`Connected`)
+})
+
+client.on('disconnected', (reason) => {
+    Logger.Instance().Log(`Lost Connection - ${reason}`, 3);
+})
+
+client.on('reconnect', () => {
+    Logger.Instance().Log('Reconnecting', 1);
+})
+
+client.on('logon', () => {
+    Logger.Instance().Log('Ready', 2);
+});
+
+client.on('join', (channel, username, self) => {
+    if (self) { return }
+    Logger.Instance().Log(`${username} joined`, 1);
+})
+
+client.on('part', (channel, username, self) => {
+    if (self) { return }
+    Logger.Instance().Log(`${username} left`, 1);
+})
+
+client.on('message', onMessageHandler);
 // Connect
 client.connect();
 
@@ -430,6 +460,7 @@ async function  onMessageHandler (target, context, msg, self){
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                 }else{
+                    
                     new Handler(new Script(_script['script'])).Execute();
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
