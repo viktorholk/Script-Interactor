@@ -472,7 +472,7 @@ async function  onMessageHandler (target, context, msg, self){
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                 }else{
-                    client.say(target, `@${context['username']}, Executing ${_script['name']}`);
+                    client.say(target, `@${context['username']}, Executing ${_script['name'] !== '' ? _script['name'] : _script['script']}`);
                     new Handler(new Script(_script['script'])).Execute();
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
