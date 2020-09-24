@@ -422,7 +422,7 @@ async function  onMessageHandler (target, context, msg, self){
         // get the command without the prefix
         const message_list = msg.replace('!', '').split(' ');
         const cmd   = message_list[0];
-        
+
         if (message_list.length > 1){
             args  = message_list.slice(1);
         }
@@ -473,6 +473,10 @@ async function  onMessageHandler (target, context, msg, self){
                 const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
                 const scriptCooldownSinceLast   = (_date - _script['date']) / 1000;
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
+
+                console.log(scriptCooldownTotal);
+                console.log(scriptCooldownSinceLast);
+                console.log(scriptCooldownRemaining);
 
                 // Check if the script is on cooldown, we check if its 0 since we want to execute the first command typed
                 if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
