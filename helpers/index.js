@@ -1,6 +1,5 @@
 const path          = require('path');
 const fs            = require('fs');
-const { exec }      = require('child_process');
 const axios         = require('axios');
 
 
@@ -150,47 +149,7 @@ class Handler{
         this.scriptPath     = path.join('scripts', this.scriptObject['script']);
     }   
 
-    Execute(args=null){
-        try {
-            let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
-            // Check if script exists in [scripts]
-            let exists = false;
-            for (let i in _config['scripts']){
-                if (_config['scripts'][i]['script'] === this.scriptObject['script']){
-                    exists = true
-                }
-            }
-            if (!exists) {
-                Logger.Instance().Log(`EXECUTE: ${this.scriptObject['script']} does not exist`, 3);
-                return false;
-            };
-            //Read config and see what extensions are avaiable
-            let method = null;
-            for (let i in _config['execute_config']){
-                if (_config['execute_config'][i]['ext'] === this.scriptExt){
-                    method = _config['execute_config'][i];
 
-                    exec(`${method['shell']} ${this.scriptPath} ` + args != null ? args[1] : '' , (err, stdout, stderr) =>{
-                        if (err){
-                            Logger.Instance().Log(err, 3);
-                        }
-                        Logger.Instance().Log(`${this.scriptObject['script']}: ${stdout}`, 4);
-                    })
-                }
-            }
-            if (!method){
-                Logger.Instance().Log('Not a valid script ' + this.scriptExt, 3);
-                return false;
-            }
-    
-            Logger.Instance().Log('EXECUTE: ' + this.scriptObject['script'], 2);
-            return true;
-
-        } catch (err){
-            Logger.Instance().Log(`ERROR: ${err}`, 3);
-        }
-        
-    }
 
     AppendScript(){
         try {
@@ -394,14 +353,15 @@ class API{
  */
 class Script{
     constructor(_scriptName){
-        this.enabled        = false,
-        this.name           = '',
-        this.script         = _scriptName,
-        this.scriptCommand  = '',
+        this.enabled        = false
+        this.name           = ''
+        this.script         = _scriptName
+        this.scriptCommand  = ''
         this.requireArgs    = false
-        this.cooldown       = 0,
-        this.followerOnly   = true,
-        this.subscriberOnly = false,
+        this.argsExample    = ''
+        this.cooldown       = 0
+        this.followerOnly   = true
+        this.subscriberOnly = false
         this.modOnly        = false
     }
 }

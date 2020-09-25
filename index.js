@@ -1,5 +1,7 @@
+const path = require('path');
 
 const tmi           = require('tmi.js');
+const { exec }      = require('child_process');
 
 const { Wrapper, Handler, Logger, API } = require('./helpers');
 
@@ -124,12 +126,17 @@ async function  onMessageHandler (target, context, msg, self){
                     Logger.Instance().Log(`${_script['script']} is on cooldown ${scriptCooldownRemaining}s remaining`, 1);
                 }else{
                     // Print the script name if it isn't empty else script command
-                    if(new Handler(_script['script']).Execute(args)){
-                        client.say(target, `@${context['username']}, Successfully executed ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
+                    // If the script is configuered to now allow args we will reset them to null
+                    if (_script['requireArgs'] === true && !args){
+                        client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['argsExample'] !== null && _script['argsExample'] !== '' ? `( ${_script['argsExample']} )` : ''}`)
+                        return;
                     }
-                    // Update the date
-                    cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
-                    return;
+                    if(ExecuteScript(_script, args)){
+                        client.say(target, `@${context['username']}, successfully executed ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
+                        // Update the date
+                        cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
+                        return;
+                    }
                 }
             }
         }
@@ -138,3 +145,56 @@ async function  onMessageHandler (target, context, msg, self){
         Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 1);
     }
 }   
+
+
+ExecuteScript = (script, args=null) => {
+    const scriptPath = path.join(Wrapper.Instance().scriptsPath, script['script']);
+    const scriptExt  = path.extname(scriptPath);
+
+    try {
+        let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
+        // Check if script exists in [scripts]
+        let exists = false;
+        for (let i in _config['scripts']){
+            if (_config['scripts'][i]['script'] === script['script']){
+                exists = true
+            }
+        }
+        if (!exists) {
+            Logger.Instance().Log(`EXECUTE: ${script['script']} does not exist`, 3);
+            return false;
+        };
+        // Check if script uses arguments and if their not null
+        if (script['requireArgs'] === true && args === null){
+            return false;
+        }
+
+
+        //Read config and see what extensions are avaiable
+        let method = null;
+        for (let i in _config['execute_config']){
+            if (_config['execute_config'][i]['ext'] === scriptExt){
+                method = _config['execute_config'][i];
+
+                const shell = `${method['shell']} ${scriptPath} ` + `${args !== null ? args.join(' ') : ''}`;
+
+                exec(shell, (err, stdout, stderr) =>{
+                    if (err){
+                        Logger.Instance().Log(err, 3);
+                    }
+                    Logger.Instance().Log(`${script['script']}: ${stdout}`, 4);
+                })
+            }
+        }
+        if (!method){
+            Logger.Instance().Log('Not a valid script ' + scriptExt, 3);
+            return false;
+        }
+
+        Logger.Instance().Log('EXECUTE: ' + this.scriptObject['script'], 2);
+        return true;
+
+    } catch (err){
+        Logger.Instance().Log(`ERROR: ${err}`, 3);
+    }
+}
