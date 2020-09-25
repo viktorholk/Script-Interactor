@@ -1,7 +1,7 @@
 {    
     "enabled"        : true,
     "name"           : "Button Press",
-    "script"         : "press.py",
+    "script"         : "Button Press.py",
     "scriptCommand"  : "press",
     "requireArgs": true,
     "argsExample": "press q"
