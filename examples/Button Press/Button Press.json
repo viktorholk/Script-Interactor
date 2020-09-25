@@ -4,6 +4,6 @@
     "script"         : "Button Press.py",
     "scriptCommand"  : "press",
     "requireArgs": true,
-    "argsExample": "press q"
+    "argsExample": "press [a,b,c... space,enter,esc]"
 
 }
