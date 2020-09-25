@@ -209,6 +209,14 @@ class Handler{
             const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(this.scriptObject['script'], path.extname(this.scriptObject['script'])) + '.json');
             if (fs.existsSync(defaultMetadata)){
                     this.scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
+                    let __script = new Script('');
+                    for (let i in __script){
+                        // If the required key doesnt exist
+                        const key = i;
+                        if (!this.scriptObject[i]){
+                            this.scriptObject[i] = __script[i];
+                        }
+                    }
             }
             if (this.scriptObject === null) {return}
     
@@ -390,6 +398,7 @@ class Script{
         this.name           = '',
         this.script         = _scriptName,
         this.scriptCommand  = '',
+        this.requireArgs    = false
         this.cooldown       = 0,
         this.followerOnly   = true,
         this.subscriberOnly = false,
