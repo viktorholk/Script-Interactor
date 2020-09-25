@@ -1,7 +1,7 @@
 const path          = require('path');
 const fs            = require('fs');
 const axios         = require('axios');
-
+const { exec }      = require('child_process');
 
 /**
  *  Our Wrapper function does everything from creating the nescessary folders and files to read write and validation of the scripts.
@@ -42,11 +42,6 @@ class Wrapper {
                 prefix: '!',
                 cooldown: 30,
                 execute_config:[
-                    {
-                        name: 'Executable',
-                        ext: '.exe',
-                        shell: 'start '
-                    },
                     {
                         name: "python",
                         ext: ".py",
@@ -96,106 +91,100 @@ class Wrapper {
             Logger.Instance().Log(err,3);
         }
     }
+    GetConfig(){
+        return this.ReadJson(this.configPath);
+    }
+
     /**
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
     ValidateScripts(){
-        try {
-            let _config = this.ReadJson(this.configPath);
-            let files = fs.readdirSync(this.scriptsPath);
+        let scripts = this.GetConfig()['scripts'];
+        let files = fs.readdirSync(this.scriptsPath);
 
-            for (let i in files){
-                let _file = files[i];
-                // Compare all file names to script names in config
-                let exists = false;
-                for (let j in _config['scripts']){
-                    if (_config['scripts'][j]['script'] === _file){
-                        exists = true;
-                    }
+        for (let i in files){
+            let _file = files[i];
+            console.log(_file)
+            // Compare all file names to script names in config
+            let exists = false;
+            for (let j in scripts){
+                if (scripts[j]['script'] === _file){
+                    exists = true;
                 }
-                // If the metadata doesn't exist create it
-                if (!exists){
-                    this.AppendScript(_file);
-                }
-            } 
+            }
+            // If the metadata doesn't exist create it
+            if (!exists){
+                this.AppendScript(new Script(_file));
+            }
+        } 
 
-            // If there is a metadata script for a file that doesn't exist delete it
-            for (let i in _config['scripts']){
-                let _script = _config['scripts'][i]['script'];
-                // Compare all file names to script names in config
-                let exists = false;
-                for (let j in files){
-                    if (_script === files[j]){
-                        exists = true;
-                    }
+        // If there is a metadata script for a file that doesn't exist delete it
+        for (let i in scripts){
+            let _script = scripts[i]['script'];
+            // Compare all file names to script names in config
+            let exists = false;
+            for (let j in files){
+                if (_script === files[j]){
+                    exists = true;
                 }
-                if (!exists){
-                    this.RemoveScript(_script);
-                }
-            } 
+            }
+            if (!exists){
+                this.RemoveScript(_script);
+            }
+        } 
 
-        } catch (err){
-            Logger.Instance().Log(`ERROR: ${err}`, 3);
-        }
     }
 
     AppendScript(scriptObject){
-        try {
-            // Dont append json files
-            if (path.extname(scriptObject['script']) === '.json'){ return }
+        // Dont append json files
+        if (path.extname(scriptObject['script']) === '.json'){ return }
 
-            let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
-            // Check if script already exists
-            for (let i in _config['scripts']){
-                if (_config['scripts'][i]['script'] === scriptObject['script']){
-                    Logger.Instance().Log(scriptObject['script'] + ' already exists', 3)
-                    return;
-                }
+        let _config = this.GetConfig();
+        // Check if script already exists
+        for (let i in _config['scripts']){
+            if (_config['scripts'][i]['script'] === scriptObject['script']){
+                Logger.Instance().Log(scriptObject['script'] + ' already exists', 3)
+                return;
             }
-            //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
-            const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
-            if (fs.existsSync(defaultMetadata)){
-                    scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
-                    let __script = new Script('');
-                    for (let i in __script){
-                        // If the required key doesnt exist
-                        const key = i;
-                        if (!scriptObject[i]){
-                            scriptObject[i] = __script[i];
-                        }
+        }
+        //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
+        const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
+        console.log(defaultMetadata)
+        if (fs.existsSync(defaultMetadata)){
+                scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
+                let __script = new Script('');
+                // Add the script name
+                
+                for (let i in __script){
+                    // If the required key doesnt exist
+                    if (!scriptObject[i]){
+                        scriptObject[i] = __script[i];
                     }
-            }
-            if (scriptObject === null) {return}
-    
-            _config['scripts'].push(scriptObject);
-            Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
-            Logger.Instance().Log('Added ' + scriptObject['script'] + ' metadata to [scripts]', 2);
+                }
         }
-        catch(err){
-            Logger.Instance().Log(`ERROR: ${err}`, 3);
-        }
+        if (scriptObject === null) {return}
+
+        _config['scripts'].push(scriptObject);
+        Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
+        Logger.Instance().Log('Added ' + scriptObject['script'] + ' metadata to [scripts]', 2);
     }
 
     RemoveScript(scriptName){
-        try {
-            let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
-            for (let i in _config['scripts']){
-                if (_config['scripts'][i]['script'] === scriptName){
-                    const index =  _config['scripts'].indexOf(_config['scripts'][i]);
-                    if (index > -1){
-                        _config['scripts'].splice(index,1)
-                    }
-    
-                    Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
-                    Logger.Instance().Log('Removed ' + scriptName + ' from metadata [scripts]',2);
-                    return;
+        let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
+        for (let i in _config['scripts']){
+            if (_config['scripts'][i]['script'] === scriptName){
+                const index =  _config['scripts'].indexOf(_config['scripts'][i]);
+                if (index > -1){
+                    _config['scripts'].splice(index,1)
                 }
-            }
-            Logger.Instance().Log('Could not find ' + scriptName + ' in [scripts]');
 
-        } catch (err){
-            Logger.Instance().Log(`ERROR: ${err}`, 3);
+                Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
+                Logger.Instance().Log('Removed ' + scriptName + ' from metadata [scripts]',2);
+                return;
+            }
         }
+        Logger.Instance().Log('Could not find ' + scriptName + ' in [scripts]');
+
     }
 }
 
@@ -356,8 +345,53 @@ class Script{
     }
 }
 
+function ExecuteScript (scriptObject, args=null){
+    const scriptPath = path.join(Wrapper.Instance().scriptsPath, scriptObject['script']);
+    const scriptExt  = path.extname(scriptPath);
+
+    const config = Wrapper.Instance().GetConfig();
+
+    // Check if script uses arguments and if their not null
+    if (scriptObject['requireArgs'] === true && args === null){
+        return false;
+    }
+    // Check if script exists in [scripts]
+    let exists = false;
+    for (let i in config['scripts']){
+        if (config['scripts'][i]['script'] === scriptObject['script']){
+            exists = true
+        }
+    }
+    if (!exists) {
+        Logger.Instance().Log(`EXECUTE: ${scriptObject['script']} does not exist`, 3);
+        return false;
+    };
+
+        //Read config and see what extensions are avaiable
+        let method = null;
+        for (let i in config['execute_config']){
+            if (config['execute_config'][i]['ext'] === scriptExt){
+                method = config['execute_config'][i];
+
+                const shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+
+                exec(shell, (err, stdout, stderr) =>{
+                    if (err){
+                        Logger.Instance().Log(err, 3);
+                    }
+                    Logger.Instance().Log(`${scriptObject['script']}: ${stdout}`, 4);
+                })
+            }
+        }
+        if (!method){
+            Logger.Instance().Log('Not a valid script ' + scriptExt, 3);
+            return false;
+        }
+}
+
 module.exports = {
     Wrapper: Wrapper,
     Logger: Logger,
-    API: API
+    API: API,
+    ExecuteScript: ExecuteScript
 }
