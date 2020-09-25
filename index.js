@@ -1,22 +1,13 @@
-const path = require('path');
-
+const path          = require('path');
 const tmi           = require('tmi.js');
-const { exec }      = require('child_process');
 
-const { Wrapper, Handler, Logger, API } = require('./helpers');
-
-
-
+const { Wrapper, ExecuteScript, Handler, Logger, API } = require('./helpers');
 /// Main program
 Wrapper.Instance().ValidateScripts();
-// Import the config from config.json with our wrapper
-let config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
-
 // Twitch options
-
-
 // Client
-const client = new tmi.client(config.opts);
+
+const client = new tmi.client(Wrapper.Instance().GetConfig().opts);
 
 // Events
 client.on('connecting', (address, port) => {
@@ -58,27 +49,36 @@ let cache   = {
     scripts:    [] 
 }
 
-async function  onMessageHandler (target, context, msg, self){
-    // Check if the message is a command
-    if (msg.charAt(0) === config.prefix){
-        // Print the command
-        Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 4);
+async function onMessageHandler(target, context, msg, self){
+    //Check if the command starts with the prefix, then its a command
+    const prefix = Wrapper.Instance().GetConfig()['prefix'];
 
-        // get the command without the prefix
-        const message_list = msg.replace('!', '').split(' ');
-        const cmd   = message_list[0];
-        let args = null;
-
+    if (msg[0] === prefix){
+        // Remove the prefix and split it into a list
+        const message_list      = msg.replace(prefix, '').split(' ');
+        const cmd               = message_list[0];
+        let args                = null;
+        // Check if any arguments is parsed
         if (message_list.length > 1){
-            args  = message_list.slice(1);
+            args = message_list.splice(1);
         }
-        // Find the script
-        for (let i in config['scripts']){
-            const _script = config['scripts'][i];
-            // Make sure the user isn't on cooldown
+        // Log user command
+        Logger.Instance().Log(`CHAT: ${context['username']} ${cmd} ` + `${args !== null ? '[ ' + args.join(', ') + ' ]' : ''}`, 4);
+
+        // Check if user is following
+        context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
+
+        // Check if it is a valid command
+        let scripts = Wrapper.Instance().GetConfig()['scripts'];
+        for (let i in scripts){
+            let _script = scripts[i];
             if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
-                // Check if user is following
-                context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
+
+                // If the script is configuered to now allow args we will reset them to null
+                if (_script['requireArgs'] === true && !args){
+                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['argsExample'] !== null && _script['argsExample'] !== '' ? `( ${_script['argsExample']} )` : ''}`)
+                    return;
+                }
 
                 //Check if script is follow only
                 if (_script['followerOnly'] && !context['isFollowing']){
@@ -112,10 +112,10 @@ async function  onMessageHandler (target, context, msg, self){
                         date: _date
                     }
                     cache['scripts'].push(__script);
-                }
+                } 
 
                 // Calculate the times
-                const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(_script['cooldown']);
+                const scriptCooldownTotal       = parseInt(Wrapper.Instance().GetConfig()['cooldown']) + parseInt(_script['cooldown']);
                 const scriptCooldownSinceLast   = (_date - __script['date']) / 1000;
                 const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
 
@@ -125,76 +125,19 @@ async function  onMessageHandler (target, context, msg, self){
                     client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
                     Logger.Instance().Log(`${_script['script']} is on cooldown ${scriptCooldownRemaining}s remaining`, 1);
                 }else{
-                    // Print the script name if it isn't empty else script command
-                    // If the script is configuered to now allow args we will reset them to null
-                    if (_script['requireArgs'] === true && !args){
-                        client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['argsExample'] !== null && _script['argsExample'] !== '' ? `( ${_script['argsExample']} )` : ''}`)
-                        return;
-                    }
-                    if(ExecuteScript(_script, args)){
-                        client.say(target, `@${context['username']}, successfully executed ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
-                        // Update the date
-                        cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
-                        return;
-                    }
+                    
+                if(ExecuteScript(_script, args)){
+                    //Print the script name if it isn't empty else script command
+                    client.say(target, `@${context['username']}, successfully executed ${_script['name'] !== '' ? _script['name'] : _script['scriptCommand']}`);
+                    // Update the date
+                    cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
+                    return;
                 }
+                }
+
             }
         }
-    }else{
-        // if it isn't a command log it anyways but with Logger.Log(,1)
-        Logger.Instance().Log(`CHAT: ${context['username']} ${msg}`, 1);
-    }
-}   
-
-
-ExecuteScript = (script, args=null) => {
-    const scriptPath = path.join(Wrapper.Instance().scriptsPath, script['script']);
-    const scriptExt  = path.extname(scriptPath);
-
-    try {
-        let _config = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath);
-        // Check if script exists in [scripts]
-        let exists = false;
-        for (let i in _config['scripts']){
-            if (_config['scripts'][i]['script'] === script['script']){
-                exists = true
-            }
-        }
-        if (!exists) {
-            Logger.Instance().Log(`EXECUTE: ${script['script']} does not exist`, 3);
-            return false;
-        };
-        // Check if script uses arguments and if their not null
-        if (script['requireArgs'] === true && args === null){
-            return false;
-        }
-
-
-        //Read config and see what extensions are avaiable
-        let method = null;
-        for (let i in _config['execute_config']){
-            if (_config['execute_config'][i]['ext'] === scriptExt){
-                method = _config['execute_config'][i];
-
-                const shell = `${method['shell']} ${scriptPath} ` + `${args !== null ? args.join(' ') : ''}`;
-
-                exec(shell, (err, stdout, stderr) =>{
-                    if (err){
-                        Logger.Instance().Log(err, 3);
-                    }
-                    Logger.Instance().Log(`${script['script']}: ${stdout}`, 4);
-                })
-            }
-        }
-        if (!method){
-            Logger.Instance().Log('Not a valid script ' + scriptExt, 3);
-            return false;
-        }
-
-        Logger.Instance().Log('EXECUTE: ' + this.scriptObject['script'], 2);
-        return true;
-
-    } catch (err){
-        Logger.Instance().Log(`ERROR: ${err}`, 3);
     }
 }
+
+
