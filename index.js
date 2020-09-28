@@ -76,7 +76,7 @@ async function onMessageHandler(target, context, msg, self){
 
                 // If the script is configuered to now allow args we will reset them to null
                 if (_script['args'] === true && !args){
-                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['usage'] !== null && _script['usage'] !== '' ? `( ${_script['usage']} )` : ''}`);
+                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Usage: ${_script['usage'] !== null && _script['usage'] !== '' ? `( ${_script['usage']} )` : ''}`);
                     return;
                 }
 
