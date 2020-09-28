@@ -2,7 +2,7 @@ from sys import argv
 from time import sleep
 from pynput.keyboard import Key, Controller
 
-
+# Main function
 if __name__ == "__main__":
     keyboard = Controller()
     # Check if the button argument is valid
