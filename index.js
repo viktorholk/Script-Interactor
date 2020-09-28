@@ -75,25 +75,25 @@ async function onMessageHandler(target, context, msg, self){
             if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
 
                 // If the script is configuered to now allow args we will reset them to null
-                if (_script['requireArgs'] === true && !args){
-                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['argsExample'] !== null && _script['argsExample'] !== '' ? `( ${_script['argsExample']} )` : ''}`)
+                if (_script['args'] === true && !args){
+                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Example: ${_script['usage'] !== null && _script['usage'] !== '' ? `( ${_script['usage']} )` : ''}`);
                     return;
                 }
 
                 //Check if script is follow only
                 if (_script['followerOnly'] && !context['isFollowing']){
-                    client.say(target, `@${context['username']}, Sorry! this script is follower only.`)
+                    client.say(target, `@${context['username']}, Sorry! this script is follower only.`);
                     return;
                 }
                 //Check if script is sub only
                 if (_script['subscriberOnly'] && !context['subscriber']){
-                    client.say(target, `@${context['username']}, Sorry! this script is subscriber only.`)
+                    client.say(target, `@${context['username']}, Sorry! this script is subscriber only.`);
                     return;
                 }
 
                 //Check if script is mod only
                 if (_script['modOnly'] && !context['mod']){
-                    client.say(target, `@${context['username']}, Sorry! this script is moderator only.`)
+                    client.say(target, `@${context['username']}, Sorry! this script is moderator only.`);
                     return;
                 }
 

@@ -336,8 +336,8 @@ class Script{
         this.name           = ''
         this.script         = _scriptName
         this.scriptCommand  = ''
-        this.requireArgs    = false
-        this.argsExample    = ''
+        this.args           = false
+        this.usage          = ''
         this.cooldown       = 0
         this.followerOnly   = true
         this.subscriberOnly = false
