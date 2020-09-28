@@ -104,7 +104,6 @@ class Wrapper {
 
         for (let i in files){
             let _file = files[i];
-            console.log(_file)
             // Compare all file names to script names in config
             let exists = false;
             for (let j in scripts){
@@ -149,7 +148,6 @@ class Wrapper {
         }
         //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
         const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
-        console.log(defaultMetadata)
         if (fs.existsSync(defaultMetadata)){
                 scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
                 let __script = new Script('');
@@ -315,7 +313,6 @@ class API{
         return this.get(`users/follows?from_id=${userid}`, (status, response) => {
             let _isFollowing = false;
             for (let i in response['data']){
-                //console.log(response['data'][i]);
                 let to_name = response['data'][i]['to_name'];
                 if (to_name === opts.identity.username){
                     _isFollowing = true;
