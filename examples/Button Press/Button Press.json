@@ -3,7 +3,7 @@
     "name"           : "Button Press",
     "script"         : "Button Press.py",
     "scriptCommand"  : "press",
-    "requireArgs": true,
-    "argsExample": "press [a,b,c... space,enter,esc]"
+    "args": true,
+    "usage": "press q"
 
 }
