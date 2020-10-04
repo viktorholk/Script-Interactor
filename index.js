@@ -16,7 +16,7 @@ client.on('connecting', (address, port) => {
 })
 
 client.on('connected', () => {
-    Logger.Instance().Log(`Connected`)
+    Logger.Instance().Log(`Connected`, 2)
 });
 
 client.on('disconnected', (reason) => {

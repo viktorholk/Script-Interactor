@@ -19,8 +19,9 @@ class Wrapper {
     }
 
     constructor(){
-        this.scriptsPath    = 'scripts'
-        this.configPath     = 'config.json'
+        this.scriptsPath    = 'scripts';
+        this.configPath     = 'config.json';
+        this.obsPath        = 'obs.txt';
          /* 
             Check if all the nescessary folders and files exists
         */
@@ -55,6 +56,15 @@ class Wrapper {
                 ],
                 scripts:[]
             });
+        }
+        // obs.txt
+        if (!fs.existsSync(this.obsPath)){
+            fs.writeFileSync(this.obsPath, '', (err) => {
+                if (err) { 
+                    Logger.Instance().Log(err,3); 
+                } 
+            });
+            Logger.Instance().Log(this.obsPath + ' obs.txt created successfully!', 2); 
         }
        }
 
@@ -109,7 +119,6 @@ class Wrapper {
 
         for (let i in files){
             let _file = files[i];
-            console.log(_file)
             // Compare all file names to script names in config
             let exists = false;
             for (let j in scripts){
@@ -154,7 +163,6 @@ class Wrapper {
         }
         //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
         const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
-        console.log(defaultMetadata)
         if (fs.existsSync(defaultMetadata)){
                 scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
                 let __script = new Script('');
@@ -320,7 +328,6 @@ class API{
         return this.get(`users/follows?from_id=${userid}`, (status, response) => {
             let _isFollowing = false;
             for (let i in response['data']){
-                //console.log(response['data'][i]);
                 let to_name = response['data'][i]['to_name'];
                 if (to_name === opts.identity.username){
                     _isFollowing = true;
@@ -348,6 +355,22 @@ class Script{
         this.subscriberOnly = false
         this.modOnly        = false
     }
+}
+
+let currentExecutingScripts = []
+
+const addExecutingScript = (scriptName) => {
+    // Add the script name to the list
+    currentExecutingScripts.push(scriptName)
+    fs.writeFileSync('obs.txt', currentExecutingScripts.join('\n'), (err) => { console.log(err)});
+    // Wait 5 secounds and remove it
+    setTimeout(() => {
+        const index = currentExecutingScripts.indexOf(scriptName);
+        if (index > -1){
+            currentExecutingScripts.splice(index, 1);
+        }
+        fs.writeFileSync('obs.txt', currentExecutingScripts.join('\n'), (err) => { console.log(err)});
+    }, 5000);
 }
 
 function ExecuteScript (scriptObject, args=null){
@@ -386,12 +409,17 @@ function ExecuteScript (scriptObject, args=null){
                     shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
                 }
 
+                // Append to obs.txt file to display on twitch stream
+                addExecutingScript(scriptObject['name']);
+                
+
 
                 exec(shell, (err, stdout, stderr) =>{
                     if (err){
                         Logger.Instance().Log(err, 3);
                     }
                     Logger.Instance().Log(`${scriptObject['script']}: ${stdout}`, 4);
+                    
                 })
             }
         }
