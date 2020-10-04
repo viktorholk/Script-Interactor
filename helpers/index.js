@@ -43,6 +43,11 @@ class Wrapper {
                 cooldown: 30,
                 execute_config:[
                     {
+                        name: "AutoHotkey",
+                        ext: ".ahk",
+                        shell: "C:\\Program Files\\AutoHotkey\\autohotkey.exe "
+                    },
+                    {
                         name: "python",
                         ext: ".py",
                         shell: "python "
@@ -373,7 +378,14 @@ function ExecuteScript (scriptObject, args=null){
             if (config['execute_config'][i]['ext'] === scriptExt){
                 method = config['execute_config'][i];
 
-                const shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                // Check if the shell in config is a path then we wont use quotes
+                let shell = ''
+                if (method['shell'] !== path.basename(method['shell'])){
+                    shell = `"${method['shell']}" "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                }else{
+                    shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                }
+
 
                 exec(shell, (err, stdout, stderr) =>{
                     if (err){
