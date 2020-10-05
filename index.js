@@ -148,9 +148,9 @@ async function onMessageHandler(target, context, msg, self){
                     // Update the date
                     cache['scripts'][cache['scripts'].indexOf(__script)]['date'] = new Date().getTime();
                     return;
+                    }
                 }
-                }
-
+                return;
             }
         }
         if (scriptFound === false){
