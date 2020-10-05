@@ -5,5 +5,4 @@
     "scriptCommand"  : "backwards",
     "args": false,
     "usage": "!backwards"
-
 }

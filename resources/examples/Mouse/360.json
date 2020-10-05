@@ -1,0 +1,8 @@
+{    
+    "enabled"        : true,
+    "name"           : "360",
+    "script"         : "360.ahk",
+    "scriptCommand"  : "360",
+    "args": false,
+    "usage": "!360"
+}
