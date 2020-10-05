@@ -75,8 +75,7 @@ async function onMessageHandler(target, context, msg, self){
         // Log user command
         Logger.Instance().Log(`CHAT: ${context['username']} ${cmd} ` + `${args !== null ? '[ ' + args.join(', ') + ' ]' : ''}`, 4);
 
-        // Check if user is following
-        context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
+
 
         // Check if it is a valid command
         let scripts = Wrapper.Instance().GetConfig()['scripts'];
@@ -87,6 +86,9 @@ async function onMessageHandler(target, context, msg, self){
             if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
 
                 scriptFound = true;
+
+                // Check if user is following
+                context['isFollowing'] = await API.Instance().isFollowing(context['user-id']);
 
                 // If the script is configuered to now allow args we will reset them to null
                 if (_script['args'] === true && !args){
