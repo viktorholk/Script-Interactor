@@ -1,9 +1,0 @@
-{    
-    "enabled"        : true,
-    "name"           : "360",
-    "script"         : "360.py",
-    "scriptCommand"  : "360",
-    "args": false,
-    "usage": "!360"
-
-}

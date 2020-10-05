@@ -1,3 +1,4 @@
+const { exception } = require('console');
 const path          = require('path');
 const tmi           = require('tmi.js');
 
@@ -15,16 +16,16 @@ client.on('connecting', (address, port) => {
 })
 
 client.on('connected', () => {
-    Logger.Instance().Log(`Connected`)
-})
+    Logger.Instance().Log(`Connected`, 2)
+});
 
 client.on('disconnected', (reason) => {
     Logger.Instance().Log(`Lost Connection - ${reason}`, 3);
-})
+});
 
 client.on('reconnect', () => {
     Logger.Instance().Log('Reconnecting', 1);
-})
+});
 
 client.on('logon', () => {
     Logger.Instance().Log('Ready', 2);
@@ -33,16 +34,25 @@ client.on('logon', () => {
 client.on('join', (channel, username, self) => {
     if (self) { return }
     Logger.Instance().Log(`${username} joined`, 1);
-})
+});
 
 client.on('part', (channel, username, self) => {
     if (self) { return }
     Logger.Instance().Log(`${username} left`, 1);
-})
+});
 
 client.on('message', onMessageHandler);
 // Connect
-client.connect();
+client.connect().catch((err) => {
+    switch (err){
+        case 'Invalid NICK.':
+            Logger.Instance().Log('Configure ./config.json with your twitch credentials', 3)
+            Logger.Instance().Log('username : <Your twitch username>', 1)
+            Logger.Instance().Log('password : <Your OAuth token>', 1)
+            Logger.Instance().Log('channels : [ "<Your username>" ]', 1)
+    }
+});
+
 
 // Our cache that holds the date from when a script last was executed
 let cache   = {
@@ -70,9 +80,13 @@ async function onMessageHandler(target, context, msg, self){
 
         // Check if it is a valid command
         let scripts = Wrapper.Instance().GetConfig()['scripts'];
+
+        let scriptFound = false;
         for (let i in scripts){
             let _script = scripts[i];
             if (_script['scriptCommand'] !== '' && _script['enabled'] !== false  && _script['scriptCommand'] === cmd){
+
+                scriptFound = true;
 
                 // If the script is configuered to now allow args we will reset them to null
                 if (_script['args'] === true && !args){
@@ -136,6 +150,9 @@ async function onMessageHandler(target, context, msg, self){
                 }
 
             }
+        }
+        if (scriptFound === false){
+            Logger.Instance().Log(`${context['username']} [${cmd}] is not a valid command.`)
         }
     }
 }

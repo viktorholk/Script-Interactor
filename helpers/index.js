@@ -19,8 +19,9 @@ class Wrapper {
     }
 
     constructor(){
-        this.scriptsPath    = 'scripts'
-        this.configPath     = 'config.json'
+        this.scriptsPath    = 'scripts';
+        this.configPath     = 'config.json';
+        this.obsPath        = 'obs.txt';
          /* 
             Check if all the nescessary folders and files exists
         */
@@ -43,6 +44,11 @@ class Wrapper {
                 cooldown: 30,
                 execute_config:[
                     {
+                        name: "AutoHotkey",
+                        ext: ".ahk",
+                        shell: "C:\\Program Files\\AutoHotkey\\autohotkey.exe "
+                    },
+                    {
                         name: "python",
                         ext: ".py",
                         shell: "python "
@@ -50,6 +56,15 @@ class Wrapper {
                 ],
                 scripts:[]
             });
+        }
+        // obs.txt
+        if (!fs.existsSync(this.obsPath)){
+            fs.writeFileSync(this.obsPath, '', (err) => {
+                if (err) { 
+                    Logger.Instance().Log(err,3); 
+                } 
+            });
+            Logger.Instance().Log(this.obsPath + ' obs.txt created successfully!', 2); 
         }
        }
 
@@ -342,6 +357,22 @@ class Script{
     }
 }
 
+let currentExecutingScripts = []
+
+const addExecutingScript = (scriptName) => {
+    // Add the script name to the list
+    currentExecutingScripts.push(scriptName)
+    fs.writeFileSync('obs.txt', currentExecutingScripts.join('\n'), (err) => { console.log(err)});
+    // Wait 5 secounds and remove it
+    setTimeout(() => {
+        const index = currentExecutingScripts.indexOf(scriptName);
+        if (index > -1){
+            currentExecutingScripts.splice(index, 1);
+        }
+        fs.writeFileSync('obs.txt', currentExecutingScripts.join('\n'), (err) => { console.log(err)});
+    }, 5000);
+}
+
 function ExecuteScript (scriptObject, args=null){
     const scriptPath = path.join(Wrapper.Instance().scriptsPath, scriptObject['script']);
     const scriptExt  = path.extname(scriptPath);
@@ -370,13 +401,25 @@ function ExecuteScript (scriptObject, args=null){
             if (config['execute_config'][i]['ext'] === scriptExt){
                 method = config['execute_config'][i];
 
-                const shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                // Check if the shell in config is a path then we wont use quotes
+                let shell = ''
+                if (method['shell'] !== path.basename(method['shell'])){
+                    shell = `"${method['shell']}" "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                }else{
+                    shell = `${method['shell']} "${scriptPath}" ` + `${args !== null ? args.join(' ') : ''}`;
+                }
+
+                // Append to obs.txt file to display on twitch stream
+                addExecutingScript(scriptObject['name']);
+                
+
 
                 exec(shell, (err, stdout, stderr) =>{
                     if (err){
                         Logger.Instance().Log(err, 3);
                     }
                     Logger.Instance().Log(`${scriptObject['script']}: ${stdout}`, 4);
+                    
                 })
             }
         }
