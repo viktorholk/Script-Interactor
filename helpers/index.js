@@ -174,11 +174,12 @@ class Wrapper {
                         scriptObject[i] = __script[i];
                     }
                 }
+            fs.unlinkSync(defaultMetadata);
+
         }
         if (scriptObject === null) {return}
 
         //Remove json file to clear up the scripts folder
-        fs.unlinkSync(defaultMetadata);
 
         _config['scripts'].push(scriptObject);
         Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
