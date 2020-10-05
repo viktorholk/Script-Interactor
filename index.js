@@ -2,7 +2,7 @@ const { exception } = require('console');
 const path          = require('path');
 const tmi           = require('tmi.js');
 
-const { Wrapper, ExecuteScript, Handler, Logger, API } = require('./helpers');
+const { Wrapper, ExecuteScript, Logger, API } = require('./helpers');
 /// Main program
 Wrapper.Instance().ValidateScripts();
 // Twitch options
@@ -46,13 +46,16 @@ client.on('message', onMessageHandler);
 client.connect().catch((err) => {
     switch (err){
         case 'Invalid NICK.':
-            Logger.Instance().Log('Configure ./config.json with your twitch credentials', 3)
-            Logger.Instance().Log('username : <Your twitch username>', 1)
-            Logger.Instance().Log('password : <Your OAuth token>', 1)
-            Logger.Instance().Log('channels : [ "<Your username>" ]', 1)
+            Logger.Instance().Log('Configure ./config.json with your twitch credentials', 3);
+            Logger.Instance().Log('username : <Your twitch username>', 1);
+            Logger.Instance().Log('password : <Your OAuth token>', 1);
+            Logger.Instance().Log('channels : [ "<Your username>" ]', 1);
+            break;
+        default:
+            Logger.Instance().Log(err);
+            break;
     }
 });
-
 
 // Our cache that holds the date from when a script last was executed
 let cache   = {
@@ -74,8 +77,6 @@ async function onMessageHandler(target, context, msg, self){
         }
         // Log user command
         Logger.Instance().Log(`CHAT: ${context['username']} ${cmd} ` + `${args !== null ? '[ ' + args.join(', ') + ' ]' : ''}`, 4);
-
-
 
         // Check if it is a valid command
         let scripts = Wrapper.Instance().GetConfig()['scripts'];

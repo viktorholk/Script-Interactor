@@ -177,6 +177,9 @@ class Wrapper {
         }
         if (scriptObject === null) {return}
 
+        //Remove json file to clear up the scripts folder
+        fs.unlinkSync(defaultMetadata);
+
         _config['scripts'].push(scriptObject);
         Wrapper.Instance().WriteJson(Wrapper.Instance().configPath, _config);
         Logger.Instance().Log('Added ' + scriptObject['script'] + ' metadata to [scripts]', 2);
