@@ -1,9 +1,0 @@
-{    
-    "enabled"        : true,
-    "name"           : "Button Press",
-    "script"         : "Button Press.py",
-    "scriptCommand"  : "press",
-    "args": true,
-    "usage": "press q"
-
-}
