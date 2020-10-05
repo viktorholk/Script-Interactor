@@ -3,7 +3,7 @@
 <p align="center">
     <img src="https://i.imgur.com/nWw1pUt.png">
   <b>Script Interactor</b><br>
-  Version: <b>1.0.0</b><br>
+  Version: <b>1.2.0</b><br>
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
 
 # Script Interactor
@@ -34,5 +34,6 @@ Since my twitch username is [tactoc](https://twitch.tv/tactoc) i would configure
         ]
 ```
 *You can also create a seperate account to use as the chatbot instead of your own account*<br>
-*Remember then to use the ``"channels": ["<Broadcaster channel>"]`` and your bot credentials for the identity*.
+*Remember then to use the ``"channels": ["<Broadcaster channel>"]`` and your bot credentials for the identity*.<br>
 
+...
