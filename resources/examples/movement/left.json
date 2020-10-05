@@ -1,0 +1,9 @@
+{    
+    "enabled"        : true,
+    "name"           : "Left",
+    "script"         : "left.ahk",
+    "scriptCommand"  : "left",
+    "args": false,
+    "usage": "!left"
+
+}

@@ -1,0 +1,9 @@
+{    
+    "enabled"        : true,
+    "name"           : "Backwards",
+    "script"         : "backwards.ahk",
+    "scriptCommand"  : "backwards",
+    "args": false,
+    "usage": "!backwards"
+
+}
