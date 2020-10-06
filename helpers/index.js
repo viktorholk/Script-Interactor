@@ -355,7 +355,7 @@ class Script{
         this.args           = false
         this.usage          = ''
         this.cooldown       = 0
-        this.followerOnly   = true
+        this.followerOnly   = false
         this.subscriberOnly = false
         this.modOnly        = false
     }
