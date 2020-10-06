@@ -26,12 +26,10 @@ Script Interactor is a twitch chatbot tool built in Node js. It encourages your 
 * [**Node**](https://nodejs.org/en/) Will be used to run the program
 * [**Python**](https://www.python.org/downloads/) Will be used to execute Python scripts
 * [**AutoHotKey**](https://www.autohotkey.com/) Will be used to execute AutoHotKey scripts
-...
+
 <br>
+
 Clone the repository and run it with ``node index.js`` in your terminal.
-
-
-
 
 # Features
 |                            | 📷 Script Interactor  |
@@ -56,21 +54,26 @@ go to [twitchapps.com/tmi](https://twitchapps.com/tmi/) and log in to retrieve y
 **THIS WORKS LIKE A PASSWORD TO YOUR ACCOUNT SO DONT SHARE IT WITH ANYONE**<br>
 Since my twitch username is [tactoc](https://twitch.tv/tactoc) i would configure it as such.
 ```
-        "identity": {
-            "username": "tactoc",
-            "password": "oauth:abcdefghijklmopqrstu1234567890"
-        },
-        "channels": [
-            "tactoc"
-        ]
+{
+    "identity": {
+        "username": "tactoc",
+        "password": "oauth:abcdefghijklmopqrstu1234567890"
+    },
+    "channels": [
+        "tactoc"
+    ],
+...
+ 
 ```
 *You can also create a seperate account to use as the chatbot instead of your own account*<br>
 *Remember then to use the ``"channels": ["<Broadcaster channel>"]`` and your bot credentials for the identity*.<br>
 
 In the ``config.json`` you can also change the prefix for the commands and the global cooldown for all scripts<br>
 ```
-    "prefix": "!",
-    "cooldown": 30,
+...
+"prefix": "!",
+"cooldown": 30,
+...
 ```
 * **prefix** Prefix of the interact commands ``['string']``
 * **cooldown** Global cooldown to wait before script can be executed again. ``['number']``
@@ -88,6 +91,7 @@ All script languages can be configured to execute.<br>
 You can create anything between simple AutoHotkey scripts to advanced python scripts<br>
 Configuation of the script and the executable method can be find in your ``config.json``<br>
 ```
+...
 "execute_config": [
     {
         "name": "AutoHotkey",
@@ -100,6 +104,7 @@ Configuation of the script and the executable method can be find in your ``confi
         "shell": "python "
     }
 ]
+...
 ```
 To add a new custom executable method you create a new item in the list with the fields ``name``, ``ext``, ``shell``<br >
 
