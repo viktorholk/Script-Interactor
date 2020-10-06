@@ -22,8 +22,16 @@
 Script Interactor is a twitch chatbot tool built in Node js. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
 
 # Installation
-Make sure you already have [Node js](https://nodejs.org/en/) installed.<br />
-Clone the repository and run it with ``node index.js`` in your terminal, ~~or go to [releases](https://github.com/viktorholk/Script-Interactor/releases) and download the latest executable.~~
+#### It is recommended to have the following programs installed before proceeding
+* [**Node**](https://nodejs.org/en/) Will be used to run the program
+* [**Python**](https://www.python.org/downloads/) Will be used to execute Python scripts
+* [**AutoHotKey**](https://www.autohotkey.com/) Will be used to execute AutoHotKey scripts
+...
+<br>
+Clone the repository and run it with ``node index.js`` in your terminal.
+
+
+
 
 # Features
 |                            | 📷 Script Interactor  |
@@ -69,14 +77,14 @@ In the ``config.json`` you can also change the prefix for the commands and the g
 
 # Usage
 The way that this works, is that there is a scripts folder that will be generated on launch. This folder and your ``config.json`` configuation file is the two files that you will be working with.<br >
-You will be putting all your scripts in this folder and it will automatically register the script' metadata in your ``config.json``.
+You will be putting all your scripts in this folder and it will automatically register the script' metadata into your ``config.json``.
 
 <p align="center">
     <img src="https://i.imgur.com/jOxb6Yb.png"></p>
     
     
 ## Scripts
-All script language can be configured to run.<br>
+All script languages can be configured to execute.<br>
 You can create anything between simple AutoHotkey scripts to advanced python scripts<br>
 Configuation of the script and the executable method can be find in your ``config.json``<br>
 ```
