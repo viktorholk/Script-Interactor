@@ -151,7 +151,7 @@ class Wrapper {
 
     AppendScript(scriptObject){
         // Dont append json files
-        if (path.extname(scriptObject['script']) === '.json'){ console.log(scriptObject['script']); return }
+        if (path.extname(scriptObject['script']) === '.json'){ return }
 
         let _config = this.GetConfig();
         // Check if script already exists
