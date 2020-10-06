@@ -5,6 +5,16 @@
   <b>Script Interactor</b><br>
   Version: <b>1.2.0</b><br>
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
+  
+<p align="center">
+  <a href="#about">Installation</a> •
+  <a href="#installation">Setup</a> •
+  <a href="#updating">Usage</a> •
+  <a href="#features">Scripts</a> •
+  <a href="#binds">Metadata</a> •
+  <a href="#wiki">OBS</a> •
+  <a href="https://github.com/viktorholk">Author</a> •
+</p>
 
 # Script Interactor
 Script Interactor is a twitch chatbot tool built in Node JS. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
@@ -109,13 +119,13 @@ This is the metadata of the script, that will be generated when you put it into 
 * **args** If the script uses arguments ``[true / false]``
 * **usage** Example of the script usage, example ``!press w`` ``['string']``
 * **cooldown** The cooldown of the script. This will be the sum of the global cooldown and this cooldown ``['number']``
-* **followerOnly** Follower only ``[true / false]`
-* **subscriberOnly**  Subscriber only ``[true / false]`
-* **modOnly** Mod only ``[true / false]`
+* **followerOnly** Follower only ``[true / false]``
+* **subscriberOnly**  Subscriber only ``[true / false]``
+* **modOnly** Mod only ``[true / false]``
 
 Remember to restart the bot when you have made changes to the ``config.json``.
 
-# OBS (Open Broadcaster Software®️)
+# OBS
 If you want to show the current running scripts on the stream as text.<br>
 Go to your scene and `Sources`. Create a new Text Source. Enable ``Read from file``. Browse the path for the directory of ``Script Interactor`` and select ``obs.txt``
 
