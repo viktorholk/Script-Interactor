@@ -14,12 +14,12 @@
     <a href="#scripts">Scripts</a> •
     <a href="#metadata">Metadata</a> •
     <a href="#obs">OBS</a> •
-    <a href="#resources">Resources</a>
+    <a href="#resources">Resources</a> •
     <a href="#license">License</a>
 </p>
 
 # Script Interactor
-Script Interactor is a twitch chatbot tool built in Node JS. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
+Script Interactor is a twitch chatbot tool built in Node js. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
 
 # Installation
 Clone the repository and run it with ``node index.js`` in your terminal, or go to [releases](https://github.com/viktorholk/Script-Interactor/releases) and download the latest executable.
@@ -134,6 +134,37 @@ This is the metadata of the script, that will be generated when you put it into 
 * **followerOnly** Follower only ``[true / false]``
 * **subscriberOnly**  Subscriber only ``[true / false]``
 * **modOnly** Mod only ``[true / false]``
+
+If you're importing a custom script that comes with a ``<script name>.json``<br>
+That means that the `json` file contains some default metadata settings for the script.<br>
+To add these import both the script and the json file, and it will add the default values to the script' metadata
+
+<p align="center">
+    <img src="https://i.imgur.com/0dlkNXy.png"></p>
+
+The json file will then be removed after import.
+* Example
+```
+{
+    "script"         : "boom.ahk",
+    modOnly          : true
+}
+```
+Will turn into 
+```
+{
+    "enabled": false,
+    "name": "",
+    "script": "boom.ahk",
+    "scriptCommand": "",
+    "args": false,
+    "usage": "",
+    "cooldown": 15,
+    "followerOnly": false,
+    "subscriberOnly": false,
+    "modOnly": true
+}
+```
 
 Remember to restart the bot when you have made changes to the ``config.json``.
 
