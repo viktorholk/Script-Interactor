@@ -7,14 +7,15 @@
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
-  <a href="#installation">Installation</a> •
-  <a href="#features">Features</a> •
-  <a href="#setup">Setup</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#scripts">Scripts</a> •
-  <a href="#metadata">Metadata</a> •
-  <a href="#obs">OBS</a> •
+     <a href="#installation">Installation</a> •
+     <a href="#features">Features</a> •
+    <a href="#setup">Setup</a> •
+     <a href="#usage">Usage</a> •
+    <a href="#scripts">Scripts</a> •
+    <a href="#metadata">Metadata</a> •
+    <a href="#obs">OBS</a> •
     <a href="#resources">Resources</a>
+    <a href="#license">License</a>
 </p>
 
 # Script Interactor
@@ -31,6 +32,7 @@ Clone the repository and run it with ``node index.js`` in your terminal, or go t
 | Scripts included             |         ✔️         |
 | Easy to configure          |         ✔️         |
 | Open source                |         ✔️         |
+| Made by a legoman                |         🇩🇰         |
 
 # Setup
 First time you run the program it will create the necessary folders and files.<br>
@@ -147,3 +149,6 @@ Go to your scene and `Sources`. Create a new Text Source. Enable ``Read from fil
 In the repository there is a ``resources`` folder.<br>
 This will be where i will upload example scripts that you can use on your stream.<br>
 If you have an interesting script you want included feel free to ask!
+
+# License
+**Script Interactor** is under the [MIT License](LICENSE)
