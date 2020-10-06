@@ -114,3 +114,16 @@ This is the metadata of the script, that will be generated when you put it into 
 * **modOnly** Mod only ``[true / false]`
 
 Remember to restart the bot when you have made changes to the ``config.json``.
+
+# OBS (Open Broadcaster Software®️)
+If you want to show the current running scripts on the stream as text.<br>
+Go to your scene and `Sources`. Create a new Text Source. Enable ``Read from file``. Browse the path for the directory of ``Script Interactor`` and select ``obs.txt``
+
+<p align="center">
+    <img src="https://i.imgur.com/sbd4ZmV.png"></p>
+
+
+# Resources
+In the repository there is a ``resources`` folder.<br>
+This will be where i will upload example scripts that you can use on your stream.<br>
+If you have an interesting script you want included feel free to ask!
