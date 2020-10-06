@@ -7,12 +7,12 @@
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
-  <a href="#about">Installation</a> •
-  <a href="#installation">Setup</a> •
-  <a href="#updating">Usage</a> •
-  <a href="#features">Scripts</a> •
-  <a href="#binds">Metadata</a> •
-  <a href="#wiki">OBS</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#setup">Setup</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#scripts">Scripts</a> •
+  <a href="#metadata">Metadata</a> •
+  <a href="#obs">OBS</a> •
   <a href="https://github.com/viktorholk">Author</a> •
 </p>
 
