@@ -29,7 +29,7 @@ Clone the repository and run it with ``node index.js`` in your terminal, ~~or go
 |                            | 📷 Script Interactor  |
 | -------------------------- | :----------------: |
 | Lightwight tool            |         ✔️         |
-| Execute various script types            |         ✔️         |
+| Execute various languages            |         ✔️         |
 | Scripts included             |         ✔️         |
 | Easy to configure          |         ✔️         |
 | Open source                |         ✔️         |
@@ -76,7 +76,7 @@ You will be putting all your scripts in this folder and it will automatically re
     
     
 ## Scripts
-All script types is welcome.<br>
+All script language can be configured to run.<br>
 You can create anything between simple AutoHotkey scripts to advanced python scripts<br>
 Configuation of the script and the executable method can be find in your ``config.json``<br>
 ```
