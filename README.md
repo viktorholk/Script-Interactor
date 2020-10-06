@@ -155,14 +155,14 @@ Will turn into
 {
     "enabled": false,
     "name": "",
-    "script": "boom.ahk",
+->  "script": "boom.ahk",
     "scriptCommand": "",
     "args": false,
     "usage": "",
     "cooldown": 15,
     "followerOnly": false,
     "subscriberOnly": false,
-    "modOnly": true
+->  "modOnly": true
 }
 ```
 
