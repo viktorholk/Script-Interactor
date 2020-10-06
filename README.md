@@ -14,7 +14,7 @@
   <a href="#scripts">Scripts</a> •
   <a href="#metadata">Metadata</a> •
   <a href="#obs">OBS</a> •
-  <a href="#resources">Resources</a> •
+    <a href="#resources">Resources</a>
 </p>
 
 # Script Interactor
