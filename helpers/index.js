@@ -151,7 +151,7 @@ class Wrapper {
 
     AppendScript(scriptObject){
         // Dont append json files
-        if (path.extname(scriptObject['script']) === '.json'){ return }
+        if (path.extname(scriptObject['script']) === '.json'){ console.log(scriptObject['script']); return }
 
         let _config = this.GetConfig();
         // Check if script already exists
@@ -161,22 +161,27 @@ class Wrapper {
                 return;
             }
         }
-        //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
-        const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
-        if (fs.existsSync(defaultMetadata)){
-                scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
-                let __script = new Script('');
-                // Add the script name
-                
-                for (let i in __script){
-                    // If the required key doesnt exist
-                    if (!scriptObject[i]){
-                        scriptObject[i] = __script[i];
+        try{
+            //Check if there already is a "script".json in the scripts folder that contains the default metadata for the script provided
+            const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
+            if (fs.existsSync(defaultMetadata)){
+                    scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
+                    let __script = new Script('');
+                    // Add the script name
+                    
+                    for (let i in __script){
+                        // If the required key doesnt exist
+                        if (!scriptObject[i]){
+                            scriptObject[i] = __script[i];
+                        }
                     }
-                }
-            fs.unlinkSync(defaultMetadata);
+                fs.unlinkSync(defaultMetadata);
 
+            }
+        } catch(err){
+            Logger.Instance().Log(`Could not read default metadata for ${scriptObject}`)
         }
+
         if (scriptObject === null) {return}
 
         //Remove json file to clear up the scripts folder
