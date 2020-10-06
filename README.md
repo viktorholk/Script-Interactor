@@ -8,12 +8,13 @@
   
 <p align="center">
   <a href="#installation">Installation</a> •
+  <a href="#features">Features</a> •
   <a href="#setup">Setup</a> •
   <a href="#usage">Usage</a> •
   <a href="#scripts">Scripts</a> •
   <a href="#metadata">Metadata</a> •
   <a href="#obs">OBS</a> •
-  <a href="https://github.com/viktorholk">Author</a> •
+  <a href="#resources">Resources</a> •
 </p>
 
 # Script Interactor
@@ -21,6 +22,15 @@ Script Interactor is a twitch chatbot tool built in Node JS. It encourages your 
 
 # Installation
 Clone the repository and run it with ``node index.js`` in your terminal, or go to [releases](https://github.com/viktorholk/Script-Interactor/releases) and download the latest executable.
+
+# Features
+|                            | 📷 Script Interactor  |
+| -------------------------- | :----------------: |
+| Lightwight tool            |         ✔️         |
+| Execute various script types            |         ✔️         |
+| Scripts included             |         ✔️         |
+| Easy to configure          |         ✔️         |
+| Open source                |         ✔️         |
 
 # Setup
 First time you run the program it will create the necessary folders and files.<br>
