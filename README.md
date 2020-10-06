@@ -36,6 +36,14 @@ Since my twitch username is [tactoc](https://twitch.tv/tactoc) i would configure
 *You can also create a seperate account to use as the chatbot instead of your own account*<br>
 *Remember then to use the ``"channels": ["<Broadcaster channel>"]`` and your bot credentials for the identity*.<br>
 
+In the ``config.json`` you can also change the prefix for the commands and the global cooldown for all scripts<br>
+```
+    "prefix": "!",
+    "cooldown": 30,
+```
+* **prefix** Prefix of the interact commands ``['string']``
+* **cooldown** Global cooldown to wait before script can be executed again. ``['number']``
+
 # Usage
 The way that this works, is that there is a scripts folder that will be generated on launch. This folder and your ``config.json`` configuation file is the two files that you will be working with.<br >
 You will be putting all your scripts in this folder and it will automatically register the script' metadata in your ``config.json``.
@@ -62,15 +70,28 @@ Configuation of the script and the executable method can be find in your ``confi
     }
 ]
 ```
-To add a new custom executable method you create a new item in the list with the fields ``name``
+To add a new custom executable method you create a new item in the list with the fields ``name``, ``ext``, ``shell``<br >
+
+* **name** Name of the executable method
+* **ext**  Extension of the script type
+    * *For instance:*
+        * pythonscript **.py**
+        * ahkscript **.ahk**
+        * myjava **.java**
+* **shell** The shell to run the script in your terminal
+    * *For instance:*
+        * To run python in shell we will just use ``python `` since we have it in our windows path (in this example)
+        * To run autohotkey, which we don't have in our path, we will use the path to the autohotkey executable as shell
+            * ``python myscript.py``
+            * ``C:\\Program Files\\AutoHotkey\\autohotkey.exe myscript.ahk``
     
 
 ## Metadata
-
+This is the metadata of the script, that will be generated when you put it into your ``scripts/``<br>
 ``` 
 {
     "enabled": true,
-    "name": "Freeze the computer for 5 seconds",
+    "name": "Freeze",
     "script": "freeze.ahk",
     "scriptCommand": "freeze",
     "args": false,
@@ -81,3 +102,15 @@ To add a new custom executable method you create a new item in the list with the
     "modOnly": false
 }
 ```
+* **enabled** Enable or disable the script. ``[true / false]``
+* **name**  The name of the script (this will also be shown on the stream if you set it up) ``['string']``
+* **script** The scriptname with extension in the ``scripts/`` folder ``['string']``
+* **scriptcommand** The command to execute the script, remember this is without the prefix of the command ``['string']``
+* **args** If the script uses arguments ``[true / false]``
+* **usage** Example of the script usage, example ``!press w`` ``['string']``
+* **cooldown** The cooldown of the script. This will be the sum of the global cooldown and this cooldown ``['number']``
+* **followerOnly** Follower only ``[true / false]`
+* **subscriberOnly**  Subscriber only ``[true / false]`
+* **modOnly** Mod only ``[true / false]`
+
+Remember to restart the bot when you have made changes to the ``config.json``.
