@@ -117,7 +117,7 @@ To add a new custom executable method you create a new item in the list with the
 * **shell** The shell to run the script in your terminal
     * *For instance:*
         * To run python in shell we will just use ``python `` since we have it in our windows path (in this example)
-        * To run autohotkey, which we don't have in our path, we will use the path to the autohotkey executable as shell
+        * To run autohotkey, which we don't have in our path, we will use the path to the autohotkey executable
             * ``python myscript.py``
             * ``C:\\Program Files\\AutoHotkey\\autohotkey.exe myscript.ahk``
     
