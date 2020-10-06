@@ -147,7 +147,7 @@ The json file will then be removed after import.
 ```
 {
     "script"         : "boom.ahk",
-    modOnly          : true
+    "modOnly"        : true
 }
 ```
 Will turn into 
