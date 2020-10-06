@@ -22,7 +22,7 @@
 Script Interactor is a twitch chatbot tool built in Node js. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
 
 # Installation
-Clone the repository and run it with ``node index.js`` in your terminal, or go to [releases](https://github.com/viktorholk/Script-Interactor/releases) and download the latest executable.
+Clone the repository and run it with ``node index.js`` in your terminal, ~~or go to [releases](https://github.com/viktorholk/Script-Interactor/releases) and download the latest executable.~~
 
 # Features
 |                            | 📷 Script Interactor  |
