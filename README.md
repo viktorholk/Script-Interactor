@@ -29,9 +29,19 @@ Script Interactor is a twitch chatbot tool built in Node js. It encourages your 
 
 <br>
 
-Clone the repository and run the shortcut file ``run.lnk``<br>
-This will automatically run ``node index.js`` in admin privileges.<br>
- * **Some scripts will be unable to execute if not in privileged mode**<br>
+* **Clone** the repository <br>
+
+* **Install** node modules <br>
+In your terminal, type ``npm install`` where both your ``package.json`` & ``package-lock.json`` is located.<br>
+This will install the necessary modules to run the program<br>
+
+* **Run** Script-Interactor <br>
+    * With ``run.lnk`` (Will open with admin privileges)
+    * With ``node index.js`` in your terminal <br>
+    **Remember to run with admin privileges** - Otherwise some scripts will not be executing properly.
+
+<br>
+
 If you wan't to run without admin privileges, just open a terminal in the working directory and run ``node index.js`` or ``node .``
 
 # Features
