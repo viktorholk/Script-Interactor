@@ -123,6 +123,7 @@ class Wrapper {
         for (let i in files){
             let _file = files[i];
             // Compare all file names to script names in config
+            let scriptObject = new Script(_file);
             let exists = false;
             for (let j in scripts){
                 if (scripts[j]['script'] === _file){
@@ -131,7 +132,29 @@ class Wrapper {
             }
             // If the metadata doesn't exist create it
             if (!exists){
-                this.AppendScript(new Script(_file));
+                this.AppendScript(scriptObject);
+            }
+            // IF the metadata exists but there is a .json file in the scripts folder that haven't been initialsed overwrite the config
+            else {
+                try{
+                    const defaultMetadata = path.join(Wrapper.Instance().scriptsPath, path.basename(scriptObject['script'], path.extname(scriptObject['script'])) + '.json');
+                    if (fs.existsSync(path.basename(_file, path.extname(_file)) + '.json')){
+                        scriptObject = Wrapper.Instance().ReadJson(defaultMetadata);
+                        let __script = new Script('');
+                        // Add the script name
+                        
+                        for (let i in __script){
+                            // If the required key doesnt exist
+                            if (!scriptObject[i]){
+                                scriptObject[i] = __script[i];
+                            }
+                        }
+                    fs.unlinkSync(defaultMetadata);
+                    }
+                    
+                } catch(err){
+                    Logger.Instance().Log(`Could not read default metadata for ${scriptObject}`)
+                }
             }
         } 
 
@@ -446,10 +469,9 @@ function ExecuteScript (scriptObject, args=null){
 Wrapper.Instance().ValidateScripts();
 // Watch scripts folder and validatescripts on changes
 let watcher = chokidar.watch('scripts/',{ignored: /^\./ ,persistent:true});
-watcher
-    .on('add', () => {
+watcher.on('all', () => {
         Wrapper.Instance().ValidateScripts();
-    })
+    });
 // Twitch options
 // Client
 
