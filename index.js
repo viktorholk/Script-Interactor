@@ -2,7 +2,7 @@ const path          = require('path');
 const fs            = require('fs');
 const axios         = require('axios');
 const { exec }      = require('child_process');
-
+const chokidar      = require('chokidar');
 const tmi           = require('tmi.js');
 
 // Classes
@@ -444,6 +444,12 @@ function ExecuteScript (scriptObject, args=null){
 
 /// Main program
 Wrapper.Instance().ValidateScripts();
+// Watch scripts folder and validatescripts on changes
+let watcher = chokidar.watch('scripts/',{ignored: /^\./ ,persistent:true});
+watcher
+    .on('add', () => {
+        Wrapper.Instance().ValidateScripts();
+    })
 // Twitch options
 // Client
 
