@@ -4,4 +4,4 @@ cd ..
 cd src/
 cls
 node index.js
-
+pause
