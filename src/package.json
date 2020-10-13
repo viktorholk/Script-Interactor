@@ -1,6 +1,6 @@
 {
   "name": "script-interactor",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Twitch chatbot tool to execute scripts on the streamers PC from viewer commands.",
   "main": "index.js",
   "scripts": {

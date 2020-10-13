@@ -1,0 +1,9 @@
+src/node_modules/
+scripts/
+src/scripts/
+config.json
+src/config.json
+.env
+src/.env
+obs.txt
+src/obs.txt
