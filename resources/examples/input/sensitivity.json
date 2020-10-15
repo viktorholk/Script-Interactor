@@ -1,0 +1,9 @@
+{    
+    "enabled"        : true,
+    "name"           : "Sensitivity",
+    "script"         : "sensitivity.py",
+    "scriptCommand"  : "sens",
+    "args": true,
+    "usage": "!sens high | !sens low"
+
+}
