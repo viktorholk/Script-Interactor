@@ -21,6 +21,12 @@
 
 # Script Interactor
 Script Interactor is a twitch chatbot tool built in Node js. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
+* **How does it work?**<br >
+    It works by putting your wanted script in the generated ``scripts/`` folder and then configure the script in the generated ``config.json``.<br>
+    You run the program and from the config it will run the script when a viewer types the command in chat.
+* **Is it safe?**<br >
+    Yes it is safe. It only runs scripts that you have configured yourself.<br >
+    The example scripts provided in ``resources/examples`` is completely unharmful. The scripts only take over your computer in a brief moment.
 
 # Discord
 Join the discord if you have any issues or questions <br >
@@ -221,4 +227,4 @@ This will be where i will upload example scripts that you can use on your stream
 If you have an interesting script you want included feel free to ask!
 
 # License
-**Script Interactor** is under the [MIT License](LICENSE)
+**Script Interactor** is under the [GNU General Public License v3.0](LICENSE)
