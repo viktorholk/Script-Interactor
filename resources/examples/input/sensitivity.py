@@ -3,6 +3,7 @@ from sys import argv
 from time import sleep
 
 # Change these variables to your fit
+# Speed is between 1 and 20
 FAST = 20
 SLOW = 1
 WAIT = 5
