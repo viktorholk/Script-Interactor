@@ -1,5 +1,7 @@
-# Examples
+# Resources
 
+## Example Scripts
+Scripts included that are free to use<br >
 * **Input** Contains all scripts that has to do with user input and controls
     * *press.ahk*<br >
         Press a selected key
@@ -14,4 +16,7 @@
         Charge the player in ``w`` direction and spam left click
     * *reverse.ahk*<br >
         Reverse movement keys on press. ``w = s | s = w ...``
-        
+
+## Templates
+Template for various scripts to help you set up<br >
+...
