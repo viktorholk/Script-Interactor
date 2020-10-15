@@ -1,8 +1,0 @@
-{    
-    "enabled"        : true,
-    "name"           : "Forwards",
-    "script"         : "forwards.ahk",
-    "scriptCommand"  : "forwards",
-    "args": false,
-    "usage": "!forwards"
-}

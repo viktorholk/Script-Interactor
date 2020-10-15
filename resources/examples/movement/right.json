@@ -1,8 +1,0 @@
-{    
-    "enabled"        : true,
-    "name"           : "Right",
-    "script"         : "right.ahk",
-    "scriptCommand"  : "right",
-    "args": false,
-    "usage": "!right"
-}
