@@ -1,0 +1,9 @@
+{    
+    "enabled"        : true,
+    "name"           : "High sens",
+    "script"         : "highsens.py",
+    "scriptCommand"  : "highsens",
+    "args": false,
+    "usage": "!highsens"
+
+}
