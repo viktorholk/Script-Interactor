@@ -1,0 +1,8 @@
+{    
+    "enabled"        : true,
+    "name"           : "Charge",
+    "script"         : "charge.ahk",
+    "scriptCommand"  : "charge",
+    "args": false,
+    "usage": "!charge"
+}

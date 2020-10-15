@@ -1,0 +1,8 @@
+{    
+    "enabled"        : true,
+    "name"           : "Movement",
+    "script"         : "movement.ahk",
+    "scriptCommand"  : "move",
+    "args": true,
+    "usage": "!move forwards"
+}
