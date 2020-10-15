@@ -1,0 +1,8 @@
+{    
+    "enabled"        : true,
+    "name"           : "Say",
+    "script"         : "say.py",
+    "scriptCommand"  : "say",
+    "args": true,
+    "usage": "!say Hello"
+}
