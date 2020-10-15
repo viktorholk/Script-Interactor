@@ -8,6 +8,7 @@
   
 <p align="center">
      <a href="#installation">Installation</a> •
+    <a href="#discord">Discord</a> •
      <a href="#features">Features</a> •
     <a href="#setup">Setup</a> •
      <a href="#usage">Usage</a> •
@@ -21,6 +22,9 @@
 # Script Interactor
 Script Interactor is a twitch chatbot tool built in Node js. It encourages your viewers to interact with your twitch stream by letting them execute various custom scripts, where you as the broadcaster is the target.<br>
 
+# Discord
+Join the discord if you have any issues or questions <br >
+* **[Invite](https://discord.gg/MZyktMG)**
 # Installation
 #### It is recommended to have the following programs installed before proceeding
 * [**Node**](https://nodejs.org/en/) Will be used to run the program and install the necessary modules
