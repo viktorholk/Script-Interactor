@@ -7,6 +7,8 @@
         Freeze mouse and keyboard input for ``x`` seconds
     * **360.ahk**<br >
         Makes a 360 with the mouse
+    * **sensitivity.py**<br >
+        Change the mouse sensitivity to either super slow or fast
 * **Movement** Contains all scripts that has to do with moving the player
     * **movement.ahk**<br >
         Move the player in a direction for ``x`` seconds
