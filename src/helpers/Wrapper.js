@@ -1,6 +1,7 @@
 const Logger = require('./Logger');
 const path = require('path');
 const fs = require('fs');
+const chokidar = require('chokidar');
 class Wrapper{
     static scriptsFolder;
     static configFile;
@@ -19,7 +20,6 @@ class Wrapper{
         Wrapper.scriptsFolder   = path.join(Wrapper.path, 'scripts');
         Wrapper.configFile      = path.join(Wrapper.path, 'config.json');
         Wrapper.obsFile         = path.join(Wrapper.path, 'obs.txt');
-
 
         // Create scripts folder
         this.createFolder(Wrapper.scriptsFolder);
@@ -64,6 +64,12 @@ class Wrapper{
             });
             Logger.Instance().log(`${Wrapper.obsFile} created successfully!`, 2)
         }
+
+        // Start watcher event so when files gets added or removed from scripts/ we validate
+        const watcher = chokidar.watch(Wrapper.scriptsFolder, {ignored: /^\./ ,persistent:true});
+        watcher.on('all', () => {
+            this.ValidateScripts();
+        })
     }
     // Get the config
     getConfig(){
@@ -96,6 +102,7 @@ class Wrapper{
         return null;
     }
 
+    // write to json
     writeJson(_path, _data){
         try{
             fs.writeFileSync(_path, JSON.stringify(
@@ -107,8 +114,7 @@ class Wrapper{
         }
     }
 
-
-        /**
+    /**
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
     ValidateScripts(){
