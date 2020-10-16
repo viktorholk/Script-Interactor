@@ -122,6 +122,7 @@ class Wrapper {
 
         for (let i in files){
             let _file = files[i];
+            // if the entry is folder skip
             // Compare all file names to script names in config
             let scriptObject = new Script(_file);
             let exists = false;
@@ -164,6 +165,7 @@ class Wrapper {
             // Compare all file names to script names in config
             let exists = false;
             for (let j in files){
+                // if the entry is folder skip
                 if (_script === files[j]){
                     exists = true;
                 }
@@ -178,8 +180,6 @@ class Wrapper {
     AppendScript(scriptObject){
         // Dont append json files
         if (path.extname(scriptObject['script']) === '.json'){ return }
-        // Skip folders
-        if (fs.lstatSync(scriptObject['script']).isDirectory()) { return }
 
         let _config = this.GetConfig();
         // Check if script already exists
