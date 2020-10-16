@@ -1,8 +1,8 @@
 {
   "name": "script-interactor",
-  "version": "1.2.1",
-  "description": "Twitch chatbot tool to execute scripts on the streamers PC from viewer commands.",
-  "main": "index.js",
+  "version": "1.2.2",
+  "description": "Script Interactor is a twitch chatbot tool",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/viktorholk/Script-Interactor.git"
   },
   "author": "viktorholk",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/viktorholk/Script-Interactor/issues"
   },
@@ -20,5 +20,8 @@
     "axios": "^0.20.0",
     "chokidar": "^3.4.2",
     "tmi.js": "^1.5.0"
+  },
+  "pkg":{
+    "scripts": "helpers/*.js"
   }
 }
