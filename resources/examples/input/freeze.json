@@ -1,9 +1,9 @@
 {    
-    "enabled"        : true,
-    "name"           : "Freeze",
-    "script"         : "freeze.ahk",
-    "scriptCommand"  : "freeze",
-    "args": false,
-    "usage": "!freeze"
+    "enabled"   : true,
+    "name"      : "Freeze",
+    "script"    : "freeze.ahk",
+    "command"   : "freeze",
+    "args"      : false,
+    "usage"     : "!freeze"
 
 }

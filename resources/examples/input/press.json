@@ -1,9 +1,9 @@
 {    
-    "enabled"        : true,
-    "name"           : "Press",
-    "script"         : "press.ahk",
-    "scriptCommand"  : "press",
-    "args": true,
-    "usage": "!press w"
+    "enabled"   : true,
+    "name"      : "Press",
+    "script"    : "press.ahk",
+    "command"   : "press",
+    "args"      : true,
+    "usage"     : "!press w"
 
 }
