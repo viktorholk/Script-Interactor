@@ -178,6 +178,8 @@ class Wrapper {
     AppendScript(scriptObject){
         // Dont append json files
         if (path.extname(scriptObject['script']) === '.json'){ return }
+        // Skip folders
+        if (fs.lstatSync(scriptObject['script']).isDirectory()) { return }
 
         let _config = this.GetConfig();
         // Check if script already exists
