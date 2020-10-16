@@ -112,19 +112,93 @@ class Wrapper{
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
     ValidateScripts(){
-        let config      = this.getConfig;
+        let config      = this.getConfig();
         const entries   = fs.readdirSync(Wrapper.scriptsFolder);
-        const _path     = fs.realpathSync(Wrapper.scriptsFolder);
-        console.log(_path)
-        // for (let i in entries){
-        //     // Check if folder then ignore
-        //     //if (fs.statSync(entries[i]).isDirectory) { continue }
-        //     console.log(_path);
-        //     console.log(entries[i])
-        // }
 
+        // Go through all the files and compare them to the scripts
+        for (const i in entries){
+            const file      = entries[i];
+            const filePath  = path.join(Wrapper.scriptsFolder, entries[i])
+            // Skip if folder
+            if (fs.lstatSync(filePath).isDirectory()) { continue }
+            // Skip if json (we will check later for default metadata)
+            if (path.extname(file) == '.json') { continue }
+
+            // Go through all the scripts in the config and compare
+            let exists = false;
+            for (const j in config['scripts']){
+                if (config['scripts'][j]['file'] === file){
+                    exists = true;
+                }
+            }
+            if (!exists){
+                let script = new Script(file);
+                
+                // Check if there is default metadata with the script (etc other json file with same name)
+                try {
+                    const defaultMetadata = path.join(Wrapper.scriptsFolder, path.basename(file, path.extname(file)) + '.json');
+                    if (fs.existsSync(defaultMetadata)){
+                        const metadata = this.readJson(defaultMetadata);
+                        for (const j in metadata){
+                            if (!script[j]){
+                                script[j] = metadata[j];
+                            }
+                        }
+                        fs.unlinkSync(defaultMetadata);
+                    }
+                } catch (err){
+                    console.log(err);
+                    Logger.Instance().log(`Invalid default metadata for ${file}`);
+                }
+                config['scripts'].push(script);
+                this.writeJson(Wrapper.configFile, config);
+                Logger.Instance().log(`Added ${file} metadata to [scripts]`, 1)
+            }
+        }
+
+        // Go through all the scripts and compare them to the files
+        for (const i in config['scripts']){
+            const script = config['scripts'][i];
+            // Compare all file names to script names in config
+            let exists = false;
+            for (const j in entries){
+                if (script['file'] == entries[j]){
+                    exists = true;
+                }
+            }
+            if (!exists){
+                for (const j in config['scripts']){
+                    if (config['scripts'][j]['file'] === script['file']){
+                        const index = config['scripts'].indexOf(config['scripts'][j]);
+                        if (index > -1){
+                            config['scripts'].splice(index,1);
+                        }
+
+                        this.writeJson(Wrapper.configFile, config);
+                        Logger.Instance().log(`Removed ${script['file']} from metadata`,2);
+                    }
+                }
+            }
+        }
     }
+}
 
+/**
+ * Script class 
+ */
+class Script{
+    constructor(file){
+        this.enabled        = false
+        this.name           = ''
+        this.file           = file
+        this.scriptCommand  = ''
+        this.args           = false
+        this.usage          = ''
+        this.cooldown       = 0
+        this.followerOnly   = false
+        this.subscriberOnly = false
+        this.modOnly        = false
+    }
 }
 
 

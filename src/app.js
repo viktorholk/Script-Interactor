@@ -3,3 +3,5 @@ const {Wrapper, Logger, Api} = require('./helpers');
 
 
 const wrapper = new Wrapper();
+
+wrapper.ValidateScripts();
