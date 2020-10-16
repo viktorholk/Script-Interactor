@@ -70,6 +70,7 @@ class Wrapper{
         watcher.on('all', () => {
             this.ValidateScripts();
         })
+
     }
     // Get the config
     getConfig(){
