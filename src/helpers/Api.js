@@ -1,5 +1,6 @@
 const axios         = require('axios');
 const Logger = require('./Logger');
+const Wrapper = require('./Wrapper')
 /**
  * API class connects to the api.tactoctical.com and gets a OAuth token from the Script-interacter client-id and secret and returns it
  * It can also connect to the Twitch API to check if a user is following or not
@@ -84,7 +85,7 @@ class Api{
     async isFollowing(userid){
         // Check if a userid is a follower to the broadcaster channel
         // get username
-        const opts = Wrapper.Instance().ReadJson(Wrapper.Instance().configPath)['opts'];
+        const opts = Wrapper.Instance().readJson(Wrapper.configFile)['opts'];
         return this.get(`users/follows?from_id=${userid}`, (status, response) => {
             let _isFollowing = false;
             for (let i in response['data']){

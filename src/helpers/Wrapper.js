@@ -7,6 +7,15 @@ class Wrapper{
     static configFile;
     static obsFile;
     static path;
+
+    static _instance = null;
+    static Instance(){
+        if (this._instance == null){
+            this._instance = new Wrapper();
+        }
+        return this._instance;
+    }
+
  
     constructor(){
         // Check if the project is getting executed from /src or project directory
@@ -198,7 +207,7 @@ class Script{
         this.enabled        = false
         this.name           = ''
         this.file           = file
-        this.scriptCommand  = ''
+        this.command        = ''
         this.args           = false
         this.usage          = ''
         this.cooldown       = 0
