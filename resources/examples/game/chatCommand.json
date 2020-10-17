@@ -1,8 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Chat Command",
-    "script"    : "chatCommand.ahk",
-    "command"   : "cmd",
-    "args"      : true,
-    "usage"     : "!cmd kill"
+    "enabled"       : true,
+    "name"          : "Chat Command",
+    "file"          : "chatCommand.py",
+    "command"       : "cmd",
+    "args"          : true,
+    "usage"         : "!cmd /spawn creeper",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

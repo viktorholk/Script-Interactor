@@ -1,9 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Press",
-    "script"    : "press.ahk",
-    "command"   : "press",
-    "args"      : true,
-    "usage"     : "!press w"
-
+    "enabled"       : true,
+    "name"          : "Press",
+    "file"          : "press.ahk",
+    "command"       : "60",
+    "args"          : false,
+    "usage"         : "!press (key) .. !press w",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

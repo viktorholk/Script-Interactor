@@ -1,9 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Reverse",
-    "script"    : "reverse.ahk",
-    "command"   : "reverse",
-    "args"      : false,
-    "usage"     : "!reverse"
-
+    "enabled"       : true,
+    "name"          : "Reverse",
+    "file"          : "reverse.ahk",
+    "command"       : "reverse",
+    "args"          : false,
+    "usage"         : "!reverse",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

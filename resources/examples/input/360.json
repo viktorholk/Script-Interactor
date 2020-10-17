@@ -1,8 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "360",
-    "script"    : "360.ahk",
-    "command"   : "360",
-    "args"      : false,
-    "usage"     : "!360"
+    "enabled"       : true,
+    "name"          : "360",
+    "file"          : "360.ahk",
+    "command"       : "360",
+    "args"          : false,
+    "usage"         : "!360",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

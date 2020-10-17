@@ -1,8 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Charge",
-    "script"    : "charge.ahk",
-    "command"   : "charge",
-    "args"      : false,
-    "usage"     : "!charge"
+    "enabled"       : true,
+    "name"          : "Charge",
+    "file"          : "charge.ahk",
+    "command"       : "charge",
+    "args"          : false,
+    "usage"         : "!charge",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

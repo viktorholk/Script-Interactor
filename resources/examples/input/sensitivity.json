@@ -1,9 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Sensitivity",
-    "script"    : "sensitivity.py",
-    "command"   : "sens",
-    "args"      : true,
-    "usage"     : "!sens high | !sens low"
-
+    "enabled"       : true,
+    "name"          : "Sensitivity",
+    "file"          : "sensitivity.py",
+    "command"       : "sens",
+    "args"          : true,
+    "usage"         : "!sens high | !sens low '(high, fast, low, slow)'",
+    "cooldown"      : 120,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

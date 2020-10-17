@@ -1,9 +1,12 @@
 {    
-    "enabled"   : true,
-    "name"      : "Freeze",
-    "script"    : "freeze.ahk",
-    "command"   : "freeze",
-    "args"      : false,
-    "usage"     : "!freeze"
-
+    "enabled"       : true,
+    "name"          : "Freeze",
+    "file"          : "freeze.ahk",
+    "command"       : "freeze",
+    "args"          : false,
+    "usage"         : "!freeze",
+    "cooldown"      : 120,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }
