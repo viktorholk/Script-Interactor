@@ -16,7 +16,7 @@
     <a href="#metadata">Metadata</a> •
     <a href="#obs">OBS</a> •
     <a href="#resources">Resources</a> •
-    <a href="#Creating your own scripts">Creating your own scripts</a> •
+    <a href="#creating-your-own-scripts">Creating your own scripts</a> •
     <a href="#license">License</a>
 </p>
 
