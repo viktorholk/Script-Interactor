@@ -136,10 +136,13 @@ class Wrapper{
             const file      = entries[i];
             const filePath  = path.join(Wrapper.scriptsFolder, entries[i])
             // Skip if folder
-            try{
-                if (fs.lstatSync(filePath).isDirectory()) { continue }
+            // Check if the file still exists
+            if (fs.existsSync(filePath)){
+                if (fs.lstatSync(filePath).isDirectory()) { 
+                    continue 
+                }
+
             }
-            catch (err){}
             // Skip if json (we will check later for default metadata)
             if (path.extname(file) == '.json') { continue }
 
