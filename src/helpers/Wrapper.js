@@ -77,7 +77,7 @@ class Wrapper{
         // Start watcher event so when files gets added or removed from scripts/ we validate
         const watcher = chokidar.watch(Wrapper.scriptsFolder, {ignored: /^\./ ,persistent:true});
         watcher.on('all', () => {
-            this.ValidateScripts();
+            this.validateScripts();
         })
 
     }
@@ -127,7 +127,7 @@ class Wrapper{
     /**
      * Check if all the files in scripts folder is related to a metadata json in the config and the other way around
      */
-    ValidateScripts(){
+    validateScripts(){
         let config      = this.getConfig();
         const entries   = fs.readdirSync(Wrapper.scriptsFolder);
 
@@ -141,7 +141,6 @@ class Wrapper{
                 if (fs.lstatSync(filePath).isDirectory()) { 
                     continue 
                 }
-
             }
             // Skip if json (we will check later for default metadata)
             if (path.extname(file) == '.json') { continue }
@@ -155,26 +154,7 @@ class Wrapper{
             }
             if (!exists){
                 let script = new Script(file);
-                
-                // Check if there is default metadata with the script (etc other json file with same name)
-                try {
-                    const defaultMetadata = path.join(Wrapper.scriptsFolder, path.basename(file, path.extname(file)) + '.json');
-                    if (fs.existsSync(defaultMetadata)){
-                        const metadata = this.readJson(defaultMetadata);
-                        for (const j in metadata){
-                            if (!script[j]){
-                                script[j] = metadata[j];
-                            }
-                        }
-                        fs.unlinkSync(defaultMetadata);
-                    }
-                } catch (err){
-                    console.log(err);
-                    Logger.Instance().log(`Invalid default metadata for ${file}`);
-                }
-                config['scripts'].push(script);
-                this.writeJson(Wrapper.configFile, config);
-                Logger.Instance().log(`Added ${file} metadata to [scripts]`, 1)
+                this.writeDefaultMetadata(script, filePath)
             }
         }
 
@@ -203,6 +183,33 @@ class Wrapper{
             }
         }
     }
+    writeDefaultMetadata(_script, _filePath){
+        // Check if there is default metadata with the script (etc other json file with same name)
+        try {
+            const defaultMetadata = path.join(Wrapper.scriptsFolder, path.basename(_filePath, path.extname(_filePath)) + '.json');
+            if (fs.existsSync(defaultMetadata)){
+                const metadata = this.readJson(defaultMetadata);
+                for (const j in metadata){
+                    if (!_script[j]){
+                        _script[j] = metadata[j];
+                    }
+                }
+                fs.unlinkSync(defaultMetadata);
+            }
+            let config = this.getConfig();
+            config['scripts'].push(_script);
+            this.writeJson(Wrapper.configFile, config);
+            Logger.Instance().log(`Added ${_filePath} metadata to [scripts]`, 1)
+
+            return _script
+        } catch (err){
+            console.log(err);
+            Logger.Instance().log(`Invalid default metadata for ${file}`);
+        }
+        return null;
+
+    }
+
 }
 
 /**

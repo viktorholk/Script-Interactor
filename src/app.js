@@ -6,7 +6,7 @@ const { exec } = require('child_process');
 
 //global variables
 const wrapper = Wrapper.Instance();
-wrapper.ValidateScripts();
+wrapper.validateScripts();
 const client = new tmi.client(wrapper.getConfig().opts);
 
 // list of current executing scripts (used to write to obs.txt)
