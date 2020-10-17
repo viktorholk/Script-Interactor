@@ -21,8 +21,5 @@
     "chokidar": "^3.4.2",
     "tmi": "^2.0.0",
     "tmi.js": "^1.5.0"
-  },
-  "pkg": {
-    "scripts": "helpers/*.js"
   }
 }
