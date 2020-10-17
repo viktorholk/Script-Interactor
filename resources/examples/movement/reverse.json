@@ -1,9 +1,9 @@
 {    
-    "enabled"        : true,
-    "name"           : "Reverse",
-    "script"         : "reverse.ahk",
-    "scriptCommand"  : "reverse",
-    "args": false,
-    "usage": "!reverse"
+    "enabled"   : true,
+    "name"      : "Reverse",
+    "script"    : "reverse.ahk",
+    "command"   : "reverse",
+    "args"      : false,
+    "usage"     : "!reverse"
 
 }
