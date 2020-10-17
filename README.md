@@ -3,7 +3,7 @@
 <p align="center">
     <img src="https://i.imgur.com/nWw1pUt.png">
   <b>Script Interactor</b><br>
-  Version: <b>1.2.1</b><br>
+  Version: <b>1.2.2</b><br>
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
@@ -159,8 +159,8 @@ This is the metadata of the script, that will be generated when you put it into 
 {
     "enabled": true,
     "name": "Freeze",
-    "script": "freeze.ahk",
-    "scriptCommand": "freeze",
+    "file": "freeze.ahk",
+    "command": "freeze",
     "args": false,
     "usage": "!freeze",
     "cooldown": 15,
@@ -191,7 +191,7 @@ The json file will then be removed after import.
 * Example
 ```
 {
-    "script"         : "boom.ahk",
+    "file"         : "boom.ahk",
     "modOnly"        : true
 }
 ```
@@ -200,14 +200,33 @@ Will turn into
 {
     "enabled": false,
     "name": "",
-->  "script": "boom.ahk",
-    "scriptCommand": "",
+->  "file": "boom.ahk",
+    "command": "",
     "args": false,
     "usage": "",
     "cooldown": 15,
     "followerOnly": false,
     "subscriberOnly": false,
 ->  "modOnly": true
+}
+```
+
+<br >
+
+``This is a sample``
+
+```
+{    
+    "enabled"       : true,
+    "name"          : "",
+    "file"          : "",
+    "command"       : "",
+    "args"          : false,
+    "usage"         : "",
+    "cooldown"      : 0,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }
 ```
 
