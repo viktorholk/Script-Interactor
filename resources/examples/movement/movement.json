@@ -1,8 +1,12 @@
 {    
-    "enabled"        : true,
-    "name"           : "Movement",
-    "script"         : "movement.ahk",
-    "scriptCommand"  : "move",
-    "args": true,
-    "usage": "!move forwards"
+    "enabled"       : true,
+    "name"          : "Movement",
+    "file"          : "movement.ahk",
+    "command"       : "move",
+    "args"          : true,
+    "usage"         : "!move forwards | (forwards, backwards, right, left)",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }

@@ -3,7 +3,7 @@
 <p align="center">
     <img src="https://i.imgur.com/nWw1pUt.png">
   <b>Script Interactor</b><br>
-  Version: <b>1.2.1</b><br>
+  Version: <b>1.2.3</b><br>
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
@@ -16,6 +16,7 @@
     <a href="#metadata">Metadata</a> •
     <a href="#obs">OBS</a> •
     <a href="#resources">Resources</a> •
+    <a href="#creating-your-own-scripts">Create</a> •
     <a href="#license">License</a>
 </p>
 
@@ -26,7 +27,7 @@ Script Interactor is a twitch chatbot tool built in Node js. It encourages your 
     You run the program and from the config it will run the script when a viewer types the command in chat.
 * **Is it safe?**<br >
     Yes it is safe. It only runs scripts that you have configured yourself.<br >
-    The example scripts provided in ``resources/examples`` is completely unharmful. The scripts only take over your computer in a brief moment.
+    The example scripts provided in ``resources/examples`` is completely unharmful. The scripts only controls your computer for a brief moment.
 
 # Discord
 Join the discord if you have any issues or questions <br >
@@ -159,8 +160,8 @@ This is the metadata of the script, that will be generated when you put it into 
 {
     "enabled": true,
     "name": "Freeze",
-    "script": "freeze.ahk",
-    "scriptCommand": "freeze",
+    "file": "freeze.ahk",
+    "command": "freeze",
     "args": false,
     "usage": "!freeze",
     "cooldown": 15,
@@ -191,7 +192,7 @@ The json file will then be removed after import.
 * Example
 ```
 {
-    "script"         : "boom.ahk",
+    "file"         : "boom.ahk",
     "modOnly"        : true
 }
 ```
@@ -200,8 +201,8 @@ Will turn into
 {
     "enabled": false,
     "name": "",
-->  "script": "boom.ahk",
-    "scriptCommand": "",
+->  "file": "boom.ahk",
+    "command": "",
     "args": false,
     "usage": "",
     "cooldown": 15,
@@ -210,8 +211,6 @@ Will turn into
 ->  "modOnly": true
 }
 ```
-
-Remember to restart the bot when you have made changes to the ``config.json``.
 
 # OBS
 If you want to show the current running scripts on the stream as text.<br>
@@ -225,6 +224,18 @@ Go to your scene and `Sources`. Create a new Text Source. Enable ``Read from fil
 In the repository there is a ``resources`` folder.<br>
 This will be where i will upload example scripts that you can use on your stream.<br>
 If you have an interesting script you want included feel free to ask!
+
+# Creating your own scripts
+I highly welcome you to write and create your own scripts <br >
+**Script Interactor** allows you to write a script in any programming language. That means that if you already know a programming language that you're quite familiar with, you can write it, and Script Interactor will execute it from the command line.<br >
+But i do recommend writing the simple scripts in [AutoHotKey](https://www.autohotkey.com/) and maybe the more advanced in [Python](https://www.python.org/). <br >
+Here are some links for you to started if you're a beginner
+* **AutoHotKey** <br>
+    * [Quick Start](https://www.autohotkey.com/docs/Tutorial.htm)
+    * [Video Tutorial](https://www.youtube.com/watch?v=lxLNtBYjkjU)
+* **Python** <br>
+    * [w3schools](https://www.w3schools.com/python/)
+    * [Video Tutorial](https://www.youtube.com/watch?v=IZj8hLrkABs)
 
 # License
 **Script Interactor** is under the [GNU General Public License v3.0](LICENSE)

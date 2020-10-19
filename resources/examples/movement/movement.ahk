@@ -10,7 +10,6 @@ pressTime = 5000
 if (%0% >= 1){
     StringLower, input, 1
     ; Convert the input to either w a s d from the argument provided
-    MsgBox, ,, %input%
     if      (input = "forwards" or input = "front" or input = "w"){
         input = w
     }

@@ -1,8 +1,12 @@
 {    
-    "enabled"        : true,
-    "name"           : "Say",
-    "script"         : "say.py",
-    "scriptCommand"  : "say",
-    "args": true,
-    "usage": "!say Hello"
+    "enabled"       : true,
+    "name"          : "Say",
+    "file"          : "say.ahk",
+    "command"       : "say",
+    "args"          : true,
+    "usage"         : "!say hello",
+    "cooldown"      : 60,
+    "followerOnly"  : false,
+    "subscriberOnly": false,
+    "modOnly"       : false
 }
