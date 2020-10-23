@@ -102,20 +102,23 @@ def ReleaseKey(hexKeyCode):
     x = Input( ctypes.c_ulong(1), ii_ )
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
-def press(key):
+def press(key, sleepTime=0.10):
     key = KEY_CODES[key.upper()]
     if not key:
         return
     
     PressKey(key)
-    sleep(0.15)
+    sleep(sleepTime)
     ReleaseKey(key)
+
+def typer(message):
+    for i in message:
+        press(i, 0)
 
 
 
 CONFIG_FOLDER   = 'config'
 COMMANDS_JSON   = path.join(CONFIG_FOLDER, 'commands.json')
-SLEEP_TIME      = 0.15
 
 
 if __name__ == "__main__":
@@ -160,7 +163,7 @@ if __name__ == "__main__":
         print(f'Typing {_cmd} command')
         
         press('t')
-        press('a')
+        typer('penis')
         press('enter')
         
         # # Type
