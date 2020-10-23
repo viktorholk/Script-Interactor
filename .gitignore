@@ -3,4 +3,4 @@ scripts/
 config.json
 .env
 obs.txt
-config/
+config/*
