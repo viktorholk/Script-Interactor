@@ -4,6 +4,8 @@ from time import sleep
 import json
 import ctypes
 
+# TODO parse command prefix since it is not the correct code when pressed
+
 # These are direct input scan codes. Which means that these keys will be able to be used in games, since the games except a different key code then we usually uses
 KEY_CODES = {
 # Alphabetic
@@ -115,8 +117,6 @@ def typer(message):
     for i in message:
         press(i, 0)
 
-
-
 CONFIG_FOLDER   = 'config'
 COMMANDS_JSON   = path.join(CONFIG_FOLDER, 'commands.json')
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
                 'commands': [
                     {
                         'command': 'help',
-                        'type': '/help'
+                        'message': '/help'
                     }
                 ]
             }, indent=4))
@@ -157,13 +157,15 @@ if __name__ == "__main__":
         item = item[0]
         
         # Get the command and what we have to type from the item found by the argumented command
-        _cmd    = item['command']
-        _type   = item['type']
+        _cmd        = item['command']
+        _message    = item['message']
 
         print(f'Typing {_cmd} command')
         
-        press('t')
-        typer('penis')
+        # open chat
+        press(chat_key)
+        # Type message
+        typer(_message)
         press('enter')
         
         # # Type
