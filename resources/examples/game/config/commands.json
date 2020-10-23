@@ -1,0 +1,9 @@
+{
+    "chat_key": "t",
+    "commands": [
+        {
+            "command": "help",
+            "type": "/help"
+        }
+    ]
+}

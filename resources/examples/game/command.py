@@ -55,13 +55,21 @@ SLEEP_TIME      = 0.15
 
 def press(key):
     win32api.keybd_event(VK_CODE[key], 0,0,0)
-    sleep(.05)
+    sleep(.15)
     win32api.keybd_event(VK_CODE[key],0, win32con.KEYEVENTF_KEYUP, 0)
 
 def typer(_str):
     pass
 
 if __name__ == "__main__":
+
+    while True:
+        win32api.keybd_event(0x57, 0,0,0)
+        sleep(1)
+
+
+    exit(0)
+
     # Create necessary folder and files
     # * Config [ FOLDER ]
     #   * - commands [ JSON ]  - store the commands here
