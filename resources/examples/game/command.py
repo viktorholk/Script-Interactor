@@ -102,6 +102,15 @@ def ReleaseKey(hexKeyCode):
     x = Input( ctypes.c_ulong(1), ii_ )
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
+def press(key):
+    key = KEY_CODES[key.upper()]
+    if not key:
+        return
+    
+    PressKey(key)
+    sleep(0.15)
+    ReleaseKey(key)
+
 
 
 CONFIG_FOLDER   = 'config'
@@ -150,13 +159,9 @@ if __name__ == "__main__":
 
         print(f'Typing {_cmd} command')
         
-        #Press the chat key
-        PressKey(KEY_CODES['T'])
-        
-        sleep(1)
-        PressKey(KEY_CODES['A'])
-        PressKey(KEY_CODES['ENTER'])
-
+        press('t')
+        press('a')
+        press('enter')
         
         # # Type
         # keyboard.type(_type)
