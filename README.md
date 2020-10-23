@@ -7,11 +7,11 @@
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
-     <a href="#installation">Installation</a> •
+    <a href="#installation">Installation</a> •
     <a href="#discord">Discord</a> •
-     <a href="#features">Features</a> •
+    <a href="#features">Features</a> •
     <a href="#setup">Setup</a> •
-     <a href="#usage">Usage</a> •
+    <a href="#usage">Usage</a> •
     <a href="#scripts">Scripts</a> •
     <a href="#metadata">Metadata</a> •
     <a href="#obs">OBS</a> •
