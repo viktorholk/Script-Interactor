@@ -167,6 +167,7 @@ if __name__ == "__main__":
 
     # Check if we have a argument passed in the progran, which is the command to execute
     if len(argv) > 1:
+        # For testing purposes we want to re-focus on our game so it can execute 
         sleep(2)
         # Get the json data from commands.json
         with open (COMMANDS_JSON, 'r') as f:
