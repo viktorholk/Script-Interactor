@@ -27,7 +27,7 @@ Script Interactor is a twitch chatbot tool built in Node js. It encourages your 
     You run the program and from the config it will run the script when a viewer types the command in chat.
 * **Is it safe?**<br >
     Yes it is safe. It only runs scripts that you have configured yourself.<br >
-    The example scripts provided in ``resources/examples`` is completely unharmful. The scripts only controls your computer for a brief moment.
+    The example scripts provided in ``resources/scripts`` is completely unharmful. The scripts only controls your computer for a brief moment.
 
 # Discord
 Join the discord if you have any issues or questions <br >
