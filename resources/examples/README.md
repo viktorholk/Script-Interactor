@@ -24,7 +24,7 @@
         Change the mouse sensitivity to either slow or fast<br >
 <br >
 
-* **.json** file <br >
-    All of the scripts comes with a ``.json`` file. <br >
-    This file is supposed to be also imported with the script to your ``scripts/`` folder. <br >
+    JSON FILE
+    All of the scripts comes with a .json file.
+    This file is supposed to be also imported with the script to your scripts/ folder.
     Its the default metadata and helps you configure the script correctly
