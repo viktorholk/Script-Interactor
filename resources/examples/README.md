@@ -22,3 +22,7 @@
         Press a key on the keyboard<br >
     * **sensitivity.py** <br >
         Change the mouse sensitivity to either slow or fast<br >
+
+
+<br >
+All of the scripts comes with a ``.json`` file that also has to be imported with the script into the ``scripts/`` folder
