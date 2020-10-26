@@ -3,7 +3,11 @@
     "commands": [
         {
             "command": "help",
-            "type": "/help"
+            "message": "/help"
+        },
+        {
+            "command": "kill",
+            "message": "/kill"
         }
     ]
 }

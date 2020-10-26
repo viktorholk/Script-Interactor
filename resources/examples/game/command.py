@@ -1,10 +1,10 @@
-from sys import argv
+from pynput.keyboard import Key, Controller
 from os import mkdir, path
+import  pyHook 
 from time import sleep
-import json
+from sys import argv
 import ctypes
-
-# TODO parse command prefix since it is not the correct code when pressed
+import json
 
 # These are direct input scan codes. Which means that these keys will be able to be used in games, since the games except a different key code then we usually uses
 KEY_CODES = {
@@ -105,21 +105,28 @@ def ReleaseKey(hexKeyCode):
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 def press(key, sleepTime=0.10):
-    key = KEY_CODES[key.upper()]
-    if not key:
-        return
-    
-    PressKey(key)
-    sleep(sleepTime)
-    ReleaseKey(key)
+    try:
+        key = KEY_CODES[key.upper()]
+        if not key:
+            return
+        
+        PressKey(key)
+        sleep(sleepTime)
+        ReleaseKey(key)
 
-def typer(message):
-    for i in message:
-        press(i, 0)
+    except Exception as e:
+        print(f'error: {e}')
+
+def block_input(toggle):
+    hook                = pyHook.HookManager()
+    hook.MouseAll       = toggle
+    hook.KeyAll         = toggle
+    hook.HookMouse()
+    hook.HookKeyboard()
+
 
 CONFIG_FOLDER   = 'config'
 COMMANDS_JSON   = path.join(CONFIG_FOLDER, 'commands.json')
-
 
 if __name__ == "__main__":
     # Create necessary folder and files
@@ -127,6 +134,7 @@ if __name__ == "__main__":
     #   * - commands [ JSON ]  - store the commands here
     if not path.exists(CONFIG_FOLDER):
         mkdir(CONFIG_FOLDER)
+        print(f'+ {CONFIG_FOLDER}')
     if not path.exists(COMMANDS_JSON):
         with open (COMMANDS_JSON, 'w+') as f:
             f.write(json.dumps({
@@ -138,6 +146,7 @@ if __name__ == "__main__":
                     }
                 ]
             }, indent=4))
+            print(f'+ {COMMANDS_JSON}')
 
     # Check if we have a argument passed in the progran, which is the command to execute
     if len(argv) > 1:
@@ -162,11 +171,15 @@ if __name__ == "__main__":
 
         print(f'Typing {_cmd} command')
         
+        block_input(True)
         # open chat
         press(chat_key)
         # Type message
-        typer(_message)
+        keyboard = Controller()
+
+        keyboard.type(_message)
         press('enter')
+        block_input(False)
         
         # # Type
         # keyboard.type(_type)
