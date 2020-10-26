@@ -1,6 +1,5 @@
 from pynput.keyboard import Key, Controller
 from os import mkdir, path
-import  pyHook 
 from time import sleep
 from sys import argv
 import ctypes
