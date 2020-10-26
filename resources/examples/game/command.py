@@ -103,6 +103,9 @@ class Input(ctypes.Structure):
     _fields_ = [("type", ctypes.c_ulong),
                 ("ii", Input_I)]
 
+def BlockInput(toggle):
+    ctypes.windll.user32.BlockInput(toggle)
+
 # Actuals Functions
 def PressKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
@@ -186,6 +189,10 @@ if __name__ == "__main__":
 
         print(f'Typing {_cmd} command')
         
+        # Block input
+        # We block the input so the user doesnt interfere with the command
+        BlockInput(True)
+
         # If the usechatKey is True
         if use_chat_key:
             press(chat_key)
@@ -197,4 +204,9 @@ if __name__ == "__main__":
         # press Enter and submit
         press('enter')
 
+        # Unblock input
+        BlockInput(False)
+
+    else:
+        print('Invalid use of script |> command.py sample_command')
 
