@@ -152,7 +152,8 @@ if __name__ == "__main__":
     if not path.exists(COMMANDS_JSON):
         with open (COMMANDS_JSON, 'w+') as f:
             f.write(json.dumps({
-                'chat_key': 't',
+                'chatKey': 't',
+                'useChatKey' : True,
                 'commands': [
                     {
                         'command': 'help',
@@ -170,8 +171,8 @@ if __name__ == "__main__":
             data = json.load(f)
 
         cmd             = argv[1]
-        chat_key        = data['chat_key']
-        print(chat_key)
+        chat_key        = data['chatKey']
+        use_chat_key    = data['useChatKey']
         item            = [i for i in data['commands'] if i['command'] == cmd]
         if not item:
             print(f'{cmd} is not a valid command')
@@ -185,22 +186,15 @@ if __name__ == "__main__":
 
         print(f'Typing {_cmd} command')
         
-        block_input(True)
-        # open chat
-        press(chat_key)
-        # Type message
-        keyboard = Controller()
+        # If the usechatKey is True
+        if use_chat_key:
+            press(chat_key)
 
+        # Type message with our default key codes
+        keyboard = Controller()
         keyboard.type(_message)
+
+        # press Enter and submit
         press('enter')
-        block_input(False)
-        
-        # # Type
-        # keyboard.type(_type)
-        # sleep(SLEEP_TIME)
-        # # Enter
-        # keyboard.press(Key.enter)
-        # sleep(0.15)
-        # keyboard.release(Key.enter)
 
 
