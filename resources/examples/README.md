@@ -22,7 +22,9 @@
         Press a key on the keyboard<br >
     * **sensitivity.py** <br >
         Change the mouse sensitivity to either slow or fast<br >
-
-
 <br >
-All of the scripts comes with a ``.json`` file that also has to be imported with the script into the ``scripts/`` folder
+
+* **.json** file <br >
+    All of the scripts comes with a ``.json`` file. <br >
+    This file is supposed to be also imported with the script to your ``scripts/`` folder. <br >
+    Its the default metadata and helps you configure the script correctly
