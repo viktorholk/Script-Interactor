@@ -1,19 +1,24 @@
 # Example Scripts
 
-* **Input** Contains all scripts that has to do with user input and controls
-    * **press.ahk**<br >
-        Press a selected key
-    * **freeze.ahk**<br >
-        Freeze mouse and keyboard input for ``x`` seconds
-    * **360.ahk**<br >
-        Makes a 360 with the mouse
-    * **sensitivity.py**<br >
-        Change the mouse sensitivity to either super slow or fast
-* **Movement** Contains all scripts that has to do with moving the player
-    * **movement.ahk**<br >
-        Move the player in a direction for ``x`` seconds
-    * **charge.ahk**<br >
-        Charge the player in ``w`` direction and spam left click
-    * **reverse.ahk**<br >
-        Reverse movement keys on press. ``w = s | s = w ...``
+* **game** <br >
+    Contains all the scripts that is used to control the game <br >
+        * **charge.ahk** <br >
+            Move the players forwards while attacking for ``x`` seconds
+        * **command.py** <br >
+            Type a game command
+        * **movement.ahk** <br >
+            Move in either direction that user has provided
+        * **reverse.ahk** <br >
+            Reverse movement``w,a,s,d`` keys
+        
 
+* **input**
+    Contains all the scripts that has to do with the input of keyboard & mouse <br >
+        * **360.ahk** <br >
+            Perform a 360
+        * **freeze.ahk** <br >
+            Freeze the input for both keyboard & mouse for ``x`` seconds
+        * **press** <br >
+            Press a key on the keyboard
+        * **sensitivity.py** <br >
+            Change the mouse sensitivity to either slow or fast
