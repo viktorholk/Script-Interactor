@@ -5,7 +5,8 @@ from sys import argv
 import ctypes
 import json
 
-# These are direct input scan codes. Which means that these keys will be able to be used in games, since the games except a different key code then we usually uses
+# These are direct input scan codes. Which means that these keys will be able to be used in games,
+# since the games except a different key code then what we usually uses
 KEY_CODES = {
 # Alphabetic
 "A":        0x1E,
@@ -132,14 +133,6 @@ def press(key, sleepTime=0.10):
 
     except Exception as e:
         print(f'error: {e}')
-
-def block_input(toggle):
-    hook                = pyHook.HookManager()
-    hook.MouseAll       = toggle
-    hook.KeyAll         = toggle
-    hook.HookMouse()
-    hook.HookKeyboard()
-
 
 CONFIG_FOLDER   = 'config'
 COMMANDS_JSON   = path.join(CONFIG_FOLDER, 'commands.json')
