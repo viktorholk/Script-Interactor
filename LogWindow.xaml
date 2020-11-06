@@ -1,0 +1,13 @@
+﻿<Window x:Class="Script_Interactor.LogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Script_Interactor"
+        mc:Ignorable="d"
+        Title="Twitch Logs" Height="300" Width="300" Topmost="True" WindowStyle="SingleBorderWindow" Closing="Window_Closing">
+    <Grid>
+        <RichTextBox x:Name="_twitchLogsRich" IsReadOnly="True" Margin="10,10,10,10">
+        </RichTextBox>
+    </Grid>
+</Window>
