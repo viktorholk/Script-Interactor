@@ -1,5 +1,8 @@
-node_modules/
-./scripts/
 config.json
 .env
 obs.txt
+scripts/
+config/
+src/node_modules/
+
+
