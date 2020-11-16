@@ -92,6 +92,9 @@ async function onMessageHandler(target, context, msg, self){
 
                 // Check if user is following. This does not come with context so we add it ourselves
                 context['isFollowing'] = await Api.Instance().isFollowing(context['user-id']);
+                if (await context['isFollowing'] === null){
+                   Logger.Instance().log(`${context['username']} follower status could not be checked.`, 1)
+                }
 
                 // If the script uses args we will return
                 if (script['args'] === true && !args){
