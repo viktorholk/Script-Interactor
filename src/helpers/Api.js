@@ -49,7 +49,7 @@ class Api{
                 (response) => {  Logger.Instance().log('Bearer token is valid', 1); return this.token}
             ).catch(
                 (err) => {
-                    return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
+                    return this.axios.get('https://api.tactoctical.com/script-interactor/token').then(
                         (response) => { 
                             this.token = response.data['results']['access_token'];
                             // Set the token in the header
