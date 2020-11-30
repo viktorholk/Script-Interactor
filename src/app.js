@@ -4,6 +4,9 @@ const fs            = require('fs');
 const {Wrapper, Logger, Api} = require('./helpers');
 const { exec } = require('child_process');
 
+// Process Title
+process.title = "Script Interactor 1.2.3";
+
 //global variables
 const wrapper = Wrapper.Instance();
 wrapper.validateScripts();
