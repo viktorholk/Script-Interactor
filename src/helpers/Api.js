@@ -60,7 +60,7 @@ class Api{
                  });
         }
         // return a new token
-        return this.axios.get('https://api.tactoctical.com/twitch-app/token').then(
+        return this.axios.get('https://api.tactoctical.com/script-interactor/token').then(
             (response) => { 
                 this.token = response.data['results']['access_token'] ;
                 // Set the token in the header
