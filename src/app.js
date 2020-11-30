@@ -17,8 +17,9 @@ console.log(`
   | || '_ \\\| __/ _ \\\ '__/ _ |/ __| __/ _ \\\| '__|
   | || | | | ||  __/ | | (_| | (__| || (_) | |   
  |___|_| |_|\\\__\\\___|_|  \\\__,_|\\\___|\\\__\\\___/|_|       
- Version 1.2.3
- By viktorholk (github.com/viktorholk)
+ Version 1.2.3              by viktorholk
+ Repository                 https://github.com/viktorholk/Script-Interactor
+ Discord for issues & help  https://discord.gg/MZyktMG
 `);
 
 
