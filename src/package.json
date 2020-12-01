@@ -1,6 +1,6 @@
 {
   "name": "script-interactor",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Script Interactor is a twitch chatbot tool",
   "main": "app.js",
   "scripts": {
