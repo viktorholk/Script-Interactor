@@ -57,6 +57,11 @@ class Wrapper{
                         name: "python",
                         ext: ".py",
                         shell: "python "
+                    },
+                    {
+                        name: "executable",
+                        ext: ".exe",
+                        shell: ""
                     }
                 ],
                 scripts:[]
