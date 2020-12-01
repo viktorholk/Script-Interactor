@@ -51,7 +51,7 @@ class Api{
                 (err) => {
                     return this.axios.get('https://api.tactoctical.com/script-interactor/token').then(
                         (response) => { 
-                            this.token = response.data['results']['access_token'];
+                            this.token = response.data['access_token'];
                             // Set the token in the header
                             this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
                             Logger.Instance().log('Updated bearer token', 1);
@@ -62,7 +62,7 @@ class Api{
         // return a new token
         return this.axios.get('https://api.tactoctical.com/script-interactor/token').then(
             (response) => { 
-                this.token = response.data['results']['access_token'] ;
+                this.token = response.data['access_token'] ;
                 // Set the token in the header
                 this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
                 Logger.Instance().log('Applied bearer token', 2);
@@ -97,6 +97,7 @@ class Api{
             }
             return _isFollowing;
         }).catch( e => {
+            console.log(e);
             return null;
         })
     }
