@@ -23,6 +23,7 @@ console.log(`
 `);
 
 
+
 //global variables
 const wrapper = Wrapper.Instance();
 wrapper.validateScripts();
@@ -109,8 +110,6 @@ async function onMessageHandler(target, context, msg, self){
             if (script['command'] !== '' & script['enabled'] !== false && script['command'] === cmd){
                 valid = true;
 
-                // Check if user is following. This does not come with context so we add it ourselves
-                context['isFollowing'] = await Api.Instance().isFollowing(context['user-id']);
                 if (await context['isFollowing'] === null){
                    Logger.Instance().log(`${context['username']} follower status could not be checked.`, 1)
                 }
@@ -122,9 +121,14 @@ async function onMessageHandler(target, context, msg, self){
                 }
 
                 //Check if script is follow only
-                if (script['followerOnly'] && !context['isFollowing']){
-                    client.say(target, `@${context['username']}, Sorry! this script is follower only.`);
-                    return;
+                if (script['followerOnly'] ){
+                    // Check if the viewer is following
+                    context['isFollowing'] = await Api.Instance().isFollowing(context['user-id']);
+
+                    if (await context['isFollowing'] === false && script['followerOnly'] === true){
+                        client.say(target, `@${context['username']}, Sorry! this script is follower only.`);
+                        return;
+                    }
                 }
                 //Check if script is sub only
                 if (script['subscriberOnly'] && !context['subscriber']){
