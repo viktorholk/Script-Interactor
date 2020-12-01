@@ -116,7 +116,7 @@ async function onMessageHandler(target, context, msg, self){
 
                 // If the script uses args we will return
                 if (script['args'] === true && !args){
-                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `Usage: ${script['usage'] !== null && script['usage'] !== '' ? `( ${script['usage']} )` : ''}`);
+                    client.say(target, `@${context['username']}, this script uses arguments. ` +  `${script['usage'] !== null && script['usage'] !== '' ? `Usage: ${script['usage']} ` : ''}`);
                     return;
                 }
 
