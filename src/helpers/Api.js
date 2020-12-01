@@ -97,7 +97,6 @@ class Api{
             }
             return _isFollowing;
         }).catch( e => {
-            console.log(e);
             return null;
         })
     }
