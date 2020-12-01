@@ -97,6 +97,7 @@ class Api{
             }
             return _isFollowing;
         }).catch( e => {
+            Logger.Instance().log('User follower status could not be checked.')
             return null;
         })
     }
