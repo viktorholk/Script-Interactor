@@ -5,7 +5,9 @@
     * **charge.ahk** <br >
          Move the players forwards while attacking for ``x`` seconds<br >
     * **command.py** <br >
-         Type a game command<br >
+         Type a ingame command by stimulating game controls<br >
+         Before this script can be configured you will have to execute an example command to setup the configuation file <br >
+         like this ``!cmd help``
     * **movement.ahk** <br >
          Move in either direction that user has provided<br >
     * **reverse.ahk** <br >
