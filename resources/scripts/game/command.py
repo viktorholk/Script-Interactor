@@ -134,6 +134,12 @@ def press(key, sleepTime=0.10):
     except Exception as e:
         print(f'error: {e}')
 
+# Import our custom config handler that wraps the config folder
+import sys
+sys.path.append('../includes')
+import ConfigHandler
+
+
 CONFIG_FOLDER   = 'config'
 CONFIG_FILE     = 'commands.json'
 
@@ -142,43 +148,22 @@ if __name__ == "__main__":
     # * Config [ FOLDER ]
     #   * - commands [ JSON ]  - store the commands here
 
-    real_path       = os.path.realpath('.')
-    real_path_list  = real_path.split(os.path.sep)
-    folder_path     = None
-    file_path       = None
-
-    try:
-        index           = real_path_list.index('src')
-        folder_path     = os.path.join(os.path.sep.join(real_path_list[:index]), CONFIG_FOLDER)
-        file_path       = os.path.join(folder_path, CONFIG_FILE)
-    except ValueError:
-        folder_path = CONFIG_FOLDER
-        file_path   = CONFIG_FILE
-
-    if not os.path.exists(folder_path):
-        os.mkdir(folder_path)
-        print(f'+ {folder_path}')
-    if not os.path.exists(file_path):
-        with open (file_path, 'w+') as f:
-            f.write(json.dumps({
-                'chatKey': 't',
-                'useChatKey' : True,
-                'commands': [
-                    {
-                        'command': 'help',
-                        'message': '/help'
-                    }
-                ]
-            }, indent=4))
-            print(f'+ {file_path}')
-
+    config = ConfigHandler.Handler('command', {
+        'chatKey': 't',
+        'useChatKey' : True,
+        'commands': [
+            {
+                'command': 'help',
+                'message': '/help'
+            }
+        ]
+    })
     # Check if we have a argument passed in the progran, which is the command to execute
     if len(argv) > 1:
         # For testing purposes we want to re-focus on our game so it can execute 
         sleep(2)
         # Get the json data from commands.json
-        with open (file_path, 'r') as f:
-            data = json.load(f)
+        data = config.read_config()
 
         cmd             = argv[1]
         chat_key        = data['chatKey']
