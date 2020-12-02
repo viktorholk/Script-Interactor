@@ -1,11 +1,12 @@
 from pynput.keyboard import Key, Controller
-from os import mkdir, path
+import os
 from time import sleep
 from sys import argv
 import ctypes
 import json
 
-# These are direct input scan codes. Which means that these keys will be able to be used in games, since the games except a different key code then we usually uses
+# These are direct input scan codes. Which means that these keys will be able to be used in games,
+# since the games except a different key code then what we usually uses
 KEY_CODES = {
 # Alphabetic
 "A":        0x1E,
@@ -133,26 +134,32 @@ def press(key, sleepTime=0.10):
     except Exception as e:
         print(f'error: {e}')
 
-def block_input(toggle):
-    hook                = pyHook.HookManager()
-    hook.MouseAll       = toggle
-    hook.KeyAll         = toggle
-    hook.HookMouse()
-    hook.HookKeyboard()
-
-
 CONFIG_FOLDER   = 'config'
-COMMANDS_JSON   = path.join(CONFIG_FOLDER, 'commands.json')
+CONFIG_FILE     = 'commands.json'
 
 if __name__ == "__main__":
     # Create necessary folder and files
     # * Config [ FOLDER ]
     #   * - commands [ JSON ]  - store the commands here
-    if not path.exists(CONFIG_FOLDER):
-        mkdir(CONFIG_FOLDER)
-        print(f'+ {CONFIG_FOLDER}')
-    if not path.exists(COMMANDS_JSON):
-        with open (COMMANDS_JSON, 'w+') as f:
+
+    real_path       = os.path.realpath('.')
+    real_path_list  = real_path.split(os.path.sep)
+    folder_path     = None
+    file_path       = None
+
+    try:
+        index           = real_path_list.index('src')
+        folder_path     = os.path.join(os.path.sep.join(real_path_list[:index]), CONFIG_FOLDER)
+        file_path       = os.path.join(folder_path, CONFIG_FILE)
+    except ValueError:
+        folder_path = CONFIG_FOLDER
+        file_path   = CONFIG_FILE
+
+    if not os.path.exists(folder_path):
+        os.mkdir(folder_path)
+        print(f'+ {folder_path}')
+    if not os.path.exists(file_path):
+        with open (file_path, 'w+') as f:
             f.write(json.dumps({
                 'chatKey': 't',
                 'useChatKey' : True,
@@ -163,12 +170,14 @@ if __name__ == "__main__":
                     }
                 ]
             }, indent=4))
-            print(f'+ {COMMANDS_JSON}')
+            print(f'+ {file_path}')
 
     # Check if we have a argument passed in the progran, which is the command to execute
     if len(argv) > 1:
+        # For testing purposes we want to re-focus on our game so it can execute 
+        sleep(2)
         # Get the json data from commands.json
-        with open (COMMANDS_JSON, 'r') as f:
+        with open (file_path, 'r') as f:
             data = json.load(f)
 
         cmd             = argv[1]
@@ -190,6 +199,7 @@ if __name__ == "__main__":
         # Block input
         # We block the input so the user doesnt interfere with the command
         BlockInput(True)
+
         # If the usechatKey is True
         if use_chat_key:
             press(chat_key)
