@@ -6,7 +6,7 @@ CONFIG_FOLDER = 'config'
 real_path       = os.path.realpath('.')
 real_path_list  = real_path.split(os.path.sep)
 class Handler(object):
-    DEBUG = True
+    LOGS = True
     folder_path     = None
     def __init__(self, _config_name, _default_data=None):
         self.config_name    = _config_name + '.json'
@@ -44,7 +44,7 @@ class Handler(object):
 
     
     def log(self, message):
-        if Handler.DEBUG:
+        if Handler.LOGS:
             print(message)
 
 
