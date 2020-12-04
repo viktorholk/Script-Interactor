@@ -37,4 +37,6 @@ Some of the scripts that is used, requires a config file to read and write data 
     handler.write_json(config)
     
     ````
+    If you want to enable logs you can do it like so:
+    ``handler.LOGS = True``
         
