@@ -1,7 +1,7 @@
 const tmi           = require('tmi.js');
 const path          = require('path');
 const fs            = require('fs');
-const {Wrapper, Logger, Api} = require('./helpers');
+const {Wrapper, Logger, Api, Database} = require('./helpers');
 const { exec } = require('child_process');
 
 // Process Title
@@ -28,6 +28,20 @@ console.log(`
 const wrapper = Wrapper.Instance();
 wrapper.validateScripts();
 const client = new tmi.client(wrapper.getConfig().opts);
+// Viewers array that will be updated everytime a viewer joins or leaves.
+let viewers = [];
+
+// If the point system is enabled create the database and wait the payrate for giving out points
+const pointSystemConfig = wrapper.getConfig()['point_system'];
+if (pointSystemConfig['enable']){
+    const db = Database.Instance();
+
+    const givePoints = setInterval(() => {
+        viewers.forEach((username) => {
+            db.addPoints(username, pointSystemConfig['amount']);
+        })
+    }, pointSystemConfig['payrate'] * 60000);
+}
 
 // list of current executing scripts (used to write to obs.txt)
 let currentExecutingScripts = [];
@@ -59,11 +73,16 @@ client.on('logon', () => {
 
 client.on('join', (channel, username, self) => {
     if (self) { return }
+    viewers.push(username);
     Logger.Instance().log(`${username} joined`, 1);
 });
 
 client.on('part', (channel, username, self) => {
     if (self) { return }
+    const index = viewers.indexOf(username);
+    if (index > -1){
+        viewers.splice(index, 1);
+    }
     Logger.Instance().log(`${username} left`, 1);
 });
 
