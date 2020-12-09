@@ -1,7 +1,7 @@
 const tmi           = require('tmi.js');
 const path          = require('path');
 const fs            = require('fs');
-const {Wrapper, Logger, Api} = require('./helpers');
+const {Wrapper, Logger, Api, Database} = require('./helpers');
 const { exec } = require('child_process');
 
 // Process Title
@@ -28,6 +28,31 @@ console.log(`
 const wrapper = Wrapper.Instance();
 wrapper.validateScripts();
 const client = new tmi.client(wrapper.getConfig().opts);
+// Viewers array that will be updated everytime a viewer joins or leaves.
+let viewers = [];
+
+// If the point system is enabled create the database and wait the payrate for giving out points
+const pointSystemConfig = wrapper.getConfig()['point_system'];
+if (pointSystemConfig['enable']){
+    const db = Database.Instance();
+
+    const givePoints = setInterval(() => {
+        viewers.forEach((username) => {
+            db.addPoints(username, pointSystemConfig['amount']);
+        })
+    }, pointSystemConfig['payrate'] * 60000);
+}
+
+// Integrated scripts, such as when a user want to see how many points they have they can !points
+
+const integratedCommands = [
+    {
+        command: 'points',
+        callback: (target, username) => {
+            client.say(target, `@${username}, you have ${Database.Instance().getPoints(username)} points. `);
+        }
+    }
+]
 
 // list of current executing scripts (used to write to obs.txt)
 let currentExecutingScripts = [];
@@ -59,11 +84,16 @@ client.on('logon', () => {
 
 client.on('join', (channel, username, self) => {
     if (self) { return }
+    viewers.push(username);
     Logger.Instance().log(`${username} joined`, 1);
 });
 
 client.on('part', (channel, username, self) => {
     if (self) { return }
+    const index = viewers.indexOf(username);
+    if (index > -1){
+        viewers.splice(index, 1);
+    }
     Logger.Instance().log(`${username} left`, 1);
 });
 
@@ -102,6 +132,16 @@ async function onMessageHandler(target, context, msg, self){
         }
         // Log user command
         Logger.Instance().log(`CHAT: ${context['username']} ${cmd} ` + `${args !== null ? '[ ' + args.join(', ') + ' ]' : ''}`, 4);
+
+        // Check if it's a valid integrated command
+        for (const i in integratedCommands){
+            const command = integratedCommands[i];
+            if (command['command'] === cmd){
+                command.callback(target, context['username']);
+                return;
+            }
+        }
+
 
         //Check if it's a valid command to a script
         let valid = false;
