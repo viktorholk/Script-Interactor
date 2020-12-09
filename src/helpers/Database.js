@@ -24,11 +24,29 @@ class Database {
 
         // Tables
         this.db.serialize(() => {
-            this.db.run(`CREATE TABLE points (
+            this.db.run(`CREATE TABLE IF NOT EXISTS points (
                 id INTEGER PRIMARY KEY,
                 username VARCHAR(25) NOT NULL,
                 points INTEGER DEFAULT 0)`)
-        })
+        });
+    }
+
+    addPoints(username, amount){
+        this.db.serialize(() => {
+            this.db.get(`SELECT * FROM points WHERE username="${username}"`, (err, row) => {
+                if (err){
+                    Logger.Instance().log(`ERROR: ${err}`);
+                    return;
+                }
+                if (row){
+                    const currentPoints = row.points;
+                    this.db.run(`UPDATE points SET points=${currentPoints + amount} WHERE username="${username}"`)
+                } else {
+                    this.db.run(`INSERT INTO points (username) VALUES ("${username}")`)
+                }
+
+            })
+        });
     }
 }
 
