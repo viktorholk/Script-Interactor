@@ -6,7 +6,7 @@ class Database {
     static _INSTANCE = null;
     static Instance(){
         if (this._INSTANCE === null){
-            this._INSTANCE = new Api();
+            this._INSTANCE = new Database();
         }
         return this._INSTANCE;
     }
