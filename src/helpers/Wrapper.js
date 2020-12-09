@@ -64,6 +64,13 @@ class Wrapper{
                         shell: ""
                     }
                 ],
+                point_system: {
+                    enable: false,
+                    amount: 50,
+                    payrate: 30
+
+                },
+                
                 scripts:[]
             });
 
