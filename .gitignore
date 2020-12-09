@@ -4,5 +4,5 @@ obs.txt
 /scripts/
 config/
 src/node_modules/
-
+src/*.sqlite3
 __pycache__
