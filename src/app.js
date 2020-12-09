@@ -43,6 +43,17 @@ if (pointSystemConfig['enable']){
     }, pointSystemConfig['payrate'] * 60000);
 }
 
+// Integrated scripts, such as when a user want to see how many points they have they can !points
+
+const integratedCommands = [
+    {
+        command: 'points',
+        callback: (target, username) => {
+            client.say(target, `@${username}, you have ${Database.Instance().getPoints(username)} points. `);
+        }
+    }
+]
+
 // list of current executing scripts (used to write to obs.txt)
 let currentExecutingScripts = [];
 // Our cache that holds the date from when a script last was executed
@@ -121,6 +132,16 @@ async function onMessageHandler(target, context, msg, self){
         }
         // Log user command
         Logger.Instance().log(`CHAT: ${context['username']} ${cmd} ` + `${args !== null ? '[ ' + args.join(', ') + ' ]' : ''}`, 4);
+
+        // Check if it's a valid integrated command
+        for (const i in integratedCommands){
+            const command = integratedCommands[i];
+            if (command['command'] === cmd){
+                command.callback(target, context['username']);
+                return;
+            }
+        }
+
 
         //Check if it's a valid command to a script
         let valid = false;
