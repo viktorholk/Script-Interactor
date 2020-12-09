@@ -31,7 +31,7 @@ class Database {
         });
     }
 
-    addPoints(username, amount){
+    addPoints(username, points){
         this.db.serialize(() => {
             this.db.get(`SELECT * FROM points WHERE username="${username}"`, (err, row) => {
                 if (err){
@@ -40,13 +40,35 @@ class Database {
                 }
                 if (row){
                     const currentPoints = row.points;
-                    this.db.run(`UPDATE points SET points=${currentPoints + amount} WHERE username="${username}"`)
+                    let amount = currentPoints + points;
+                    this.db.run(`UPDATE points SET points=${amount} WHERE username="${username}"`);
+                    Logger.Instance().log(`Added ${points} points to ${username}`, 1);
                 } else {
                     this.db.run(`INSERT INTO points (username) VALUES ("${username}")`)
                 }
 
             })
         });
+    }
+
+    removePoints(username, points){
+        this.db.serialize(() => {
+            this.db.get(`SELECT * FROM points where username="${username}"`, (err, row) => {
+                if (err){
+                    Logger.Instance().log(`ERROR: ${err}`);
+                    return;
+                }
+                if (row){
+                    const currentPoints = row.points;
+                    let amount = ((currentPoints - points) >= 0) ? currentPoints - points : 0;
+                    if (amount){
+                        this.db.run(`UPDATE points SET points=${amount} WHERE username="${username}"`);
+                        Logger.Instance().log(`Removed ${points} points to ${username}`, 1);
+                    }
+                } else {
+                }
+            })
+        })
     }
 }
 
