@@ -239,6 +239,7 @@ class Script{
         this.followerOnly   = false
         this.subscriberOnly = false
         this.modOnly        = false
+        this.pointsCost     = 0
     }
 }
 
