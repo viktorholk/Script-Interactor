@@ -54,6 +54,21 @@ const integratedCommands = [
                 client.say(args[0], `@${args[1]['username']}, you have ${user.points} points. `);
             })
         }
+    },
+    {
+        command: 'scripts',
+        callback: (...args) => {
+            let string = `@${args[1]['username']}, Here is a list of available scripts: `;
+            const config = wrapper.getConfig();
+            let enabledScripts = [];
+            for (const i in config['scripts']) {
+                if (config['scripts'][i].enabled === true){
+                    enabledScripts.push(config['prefix'] + config['scripts'][i]['command']);
+                }
+            }
+            string += enabledScripts.join(', ');
+            client.say(args[0], string);
+        }
     }
 ]
 
