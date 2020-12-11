@@ -47,6 +47,12 @@ if (pointSystemConfig['enable']){
 
 const integratedCommands = [
     {
+        command: 'help',
+        callback: (...args) => {
+            client.say(args[0], `@${args[1]['username']}, here is the available Script Interactor commands: !points, !scripts`);
+        }
+    },
+    {
         command: 'points',
         callback: (...args) => {
             // Get user points
