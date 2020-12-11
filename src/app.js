@@ -48,8 +48,11 @@ if (pointSystemConfig['enable']){
 const integratedCommands = [
     {
         command: 'points',
-        callback: (target, username) => {
-            client.say(target, `@${username}, you have ${Database.Instance().getPoints(username)} points. `);
+        callback: (...args) => {
+            // Get user points
+            Database.Instance().getUser(args[1]['username'], (user) => {
+                client.say(args[0], `@${args[1]['username']}, you have ${user.points} points. `);
+            })
         }
     }
 ]
@@ -137,9 +140,9 @@ async function onMessageHandler(target, context, msg, self){
         for (const i in integratedCommands){
             const command = integratedCommands[i];
             if (command['command'] === cmd){
-                command.callback(target, context['username']);
+                command.callback(target, context, msg);
                 return;
-            }
+            } 
         }
 
 
