@@ -174,6 +174,37 @@ async function onMessageHandler(target, context, msg, self){
             if (script['command'] !== '' & script['enabled'] !== false && script['command'] === cmd){
                 valid = true;
 
+                const date = new Date().getTime();
+                // See if the script already is in the cache
+                let _script = null;
+                for (let j in cache['scripts']){
+                    if (cache['scripts'][j]['file'] === script['file']){
+                        _script = cache['scripts'][j];
+                    }
+                }
+                // If there is no script push it to the cache with a date
+                if (_script === null){
+                    _script = {
+                        file: script['file'],t
+                        date: date
+                    }
+                    cache['scripts'].push(_script);
+                } 
+
+                // Calculate the times
+                const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(script['cooldown']);
+                const scriptCooldownSinceLast   = (date - _script['date']) / 1000;
+                const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
+
+                // Check if the script is on cooldown, we check if its 0 since we want to execute the script the first time
+                if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
+                    client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
+                    Logger.Instance().log(`${script['file']} is on cooldown ${scriptCooldownRemaining}s remaining`, 1);
+                    return;
+                }
+
+
+
                 if (await context['isFollowing'] === null){
                    Logger.Instance().log(`${context['username']} follower status could not be checked.`, 1)
                 }
@@ -222,41 +253,11 @@ async function onMessageHandler(target, context, msg, self){
                     });
                 }
 
-                const date = new Date().getTime();
-                // See if the script already is in the cache
-                let _script = null;
-                for (let j in cache['scripts']){
-                    if (cache['scripts'][j]['file'] === script['file']){
-                        _script = cache['scripts'][j];
-                    }
-                }
-                // If there is no script push it to the cache with a date
-                if (_script === null){
-                    _script = {
-                        file: script['file'],
-                        date: date
-                    }
-                    cache['scripts'].push(_script);
-                } 
-
-                // Calculate the times
-                const scriptCooldownTotal       = parseInt(config['cooldown']) + parseInt(script['cooldown']);
-                const scriptCooldownSinceLast   = (date - _script['date']) / 1000;
-                const scriptCooldownRemaining   = scriptCooldownTotal - scriptCooldownSinceLast;
-
-                // Check if the script is on cooldown, we check if its 0 since we want to execute the script the first time
-                if (scriptCooldownSinceLast < scriptCooldownTotal && scriptCooldownSinceLast !== 0){
-                    client.say(target, `@${context['username']}, Sorry! the script is on cooldown ${scriptCooldownRemaining.toFixed(1)} s`)
-                    Logger.Instance().log(`${script['file']} is on cooldown ${scriptCooldownRemaining}s remaining`, 1);
-                }
-                // Execute
-                else {
-                    if (ExecuteScript(script, args)){
-                        //say the script name if it isn't empty else script command
-                        client.say(target, `@${context['username']}, successfully executed ${script['name'] !== '' ? script['name'] : _script['file']}`);
-                        // Update the date
-                        cache['scripts'][cache['scripts'].indexOf(_script)]['date'] = new Date().getTime();
-                    }
+                if (ExecuteScript(script, args)){
+                    //say the script name if it isn't empty else script command
+                    client.say(target, `@${context['username']}, successfully executed ${script['name'] !== '' ? script['name'] : _script['file']}`);
+                    // Update the date
+                    cache['scripts'][cache['scripts'].indexOf(_script)]['date'] = new Date().getTime();
                 }
             }
         }
