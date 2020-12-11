@@ -70,6 +70,19 @@ class Database {
             })
         })
     }
+
+    async getUser(username, callback) {
+        this.db.serialize(() => {
+           this.db.get(`SELECT * FROM points where username="${username}"`, (err, row) => {
+               if (err){
+                   Logger.Instance().log(`There was an error retriving the data of ${username}`,3);
+                    return;
+                }
+
+                callback(row);
+            });
+        });
+    }
 }
 
 module.exports = Database;
