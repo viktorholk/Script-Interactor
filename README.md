@@ -3,7 +3,7 @@
 <p align="center">
     <img src="https://i.imgur.com/nWw1pUt.png">
   <b>Script Interactor</b><br>
-  Version: <b>1.2.4</b><br>
+  Version: <b>1.3.0</b><br>
   Contributors: <a href="https://github.com/viktorholk">viktorholk</a></p>
   
 <p align="center">
