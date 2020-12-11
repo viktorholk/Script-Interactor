@@ -105,10 +105,19 @@ In the ``config.json`` you can also change the prefix for the commands and the g
 ...
 "prefix": "!",
 "cooldown": 30,
+"point_system": {
+    "enable": true,
+    "amount": 50,
+    "payrate": 1
+},
 ...
 ```
 * **prefix** Prefix of the interact commands ``['string']``
 * **cooldown** Global cooldown to wait before script can be executed again. ``['number']``
+* **points_system** Configure the point system ``['dict']``
+    * **enable** Enable of disable the points system ``['boolean']``
+    * **amount** The amount of points the user should get every ``payrate`` ``['number']``
+    * **payrate** Pay amount ``['number']``
 
 # Usage
 The way that this works, is that there is a scripts folder that will be generated on launch. This folder and your ``config.json`` configuation file is the two files that you will be working with.<br >
@@ -168,6 +177,7 @@ This is the metadata of the script, that will be generated when you put it into 
     "followerOnly": true,
     "subscriberOnly": false,
     "modOnly": false
+    "pointsCost": 0
 }
 ```
 * **enabled** Enable or disable the script. ``[true / false]``
@@ -180,6 +190,7 @@ This is the metadata of the script, that will be generated when you put it into 
 * **followerOnly** Follower only ``[true / false]``
 * **subscriberOnly**  Subscriber only ``[true / false]``
 * **modOnly** Mod only ``[true / false]``
+* **pointsCost** If the script costs points, 0 = false, any number > 0 is the cost of the script ``[true / false]``
 
 If you're importing a custom script that comes with a ``<script name>.json``<br>
 That means that the `json` file contains some default metadata settings for the script.<br>
@@ -208,7 +219,8 @@ Will turn into
     "cooldown": 15,
     "followerOnly": false,
     "subscriberOnly": false,
-->  "modOnly": true
+->  "modOnly": true,
+    "pointsCost": 0
 }
 ```
 
