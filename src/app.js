@@ -185,7 +185,7 @@ async function onMessageHandler(target, context, msg, self){
                 // If there is no script push it to the cache with a date
                 if (_script === null){
                     _script = {
-                        file: script['file'],t
+                        file: script['file'],
                         date: date
                     }
                     cache['scripts'].push(_script);
