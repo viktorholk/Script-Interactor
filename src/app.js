@@ -206,6 +206,22 @@ async function onMessageHandler(target, context, msg, self){
                     return;
                 }
 
+                // Check if the script uses points and if the user has the amount of points needed
+                // If points isn't 0 that means that the script uses the point system
+                if (script['pointsCost'] > 0){
+                    let enoughPoints = false;
+                    const scriptCost = script['pointsCost'];
+                    await Database.Instance().getUser(context['username'], (user) => {
+                        if (user.points >= scriptCost){
+                            Database.Instance().removePoints(context['username'], scriptCost);
+                            enoughPoints = true;
+                        } else {
+                            client.say(target, `@${context['username']}, Sorry you don't have enough points`)
+                            return;
+                        }
+                    });
+                }
+
                 const date = new Date().getTime();
                 // See if the script already is in the cache
                 let _script = null;
